@@ -5,18 +5,18 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka
-
+  instance:
+    prefer-ip-address: true
+    ip-address: localhost
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
       routes:
-        - id: auth-service
-          uri: lb://auth-service
+        - id: auth-service-updated
+          uri: http://localhost:7777
           predicates:
-            - Path=/auth/**
-        - id: concert-service
-          uri: lb://concert-service
-          predicates:
-            - Path=/concert/**
+            - Path=/authgateway/**
+  main:
+    web-application-type: reactive

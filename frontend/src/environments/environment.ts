@@ -11,5 +11,5 @@ export const environment = {
   salt: '4b64210f88ea7c9b12dc1e3e30cfbcf5',
 
   // API URLs
-  apiUrl: 'http://localhost:7777',
+  apiUrl: 'http://localhost:8080',
 };
