@@ -1,0 +1,50 @@
+package com.itgi.claim.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.itgi.claim.ValidationProperties;
+import com.itgi.claim.service.CommonService;
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.RestResponse;
+import com.itgi.claim.wrapper.UserPrincipal;
+
+@RestController
+@RequestMapping("/claim")
+public class ClaimController {
+
+	private static Logger log = LoggerFactory.getLogger(ClaimController.class);
+	
+	@Autowired
+	private ValidationProperties validationProperties;
+	
+	@Autowired
+	private CommonService commonService;
+	
+	@GetMapping("/list-of-claims")
+	public RestResponse listOfClaims(@AuthenticationPrincipal UserPrincipal user) {
+
+		log.info("Inside listOfClaims() in ClaimController ");
+		try {
+			List<ClaimDetails> listOfClaims = commonService.getListOfClaims(user);
+			
+			if (listOfClaims.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error getting list of claims.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), listOfClaims);
+		} catch (Exception e) {
+			log.error("Error in listOfClaims() in ClaimController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+	
+}

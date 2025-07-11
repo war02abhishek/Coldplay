@@ -1,0 +1,66 @@
+##############################################
+# DATABASE WEB PORTAL                        #
+##############################################
+portal.database.use.datasource=N
+portal.database.datasource.name=jdbc/itgi
+portal.database.driver.class=com.ibm.db2.jcc.DB2Driver
+portal.database.schema=ADMINISTRATOR
+portal.database.url=jdbc:db2://10.10.2.23:50003/ITGI
+portal.database.user=db2inst3
+portal.database.password=db2inst3
+
+##############################################
+# DATABASE SIEBEL                            #
+##############################################
+siebel.database.use.datasource=N
+siebel.database.datasource.name=jdbc/siebelitgi
+siebel.database.driver.class=com.ibm.db2.jcc.DB2Driver
+siebel.database.url=jdbc:db2://10.10.2.23:50000/SBLDEVDB
+siebel.database.schema=DB2IUSR
+#siebel.database.user=deepakitgi
+#siebel.database.password=#Iffco#123
+siebel.database.user=deepakb
+siebel.database.password=itgi@123
+
+##############################################
+# SIEBEL WEB SERVICE                         #
+##############################################
+siebel.webservice.address=http://192.168.100.193/eai_ws_enu/start.swe?SWEExtSource=WSWebService&SWEExtCmd=Execute
+siebel.webservice.username=wsuser
+siebel.webservice.password=wsuser
+siebel.webservice.timeout=90000
+siebel.webservice.header.flag=N
+
+##############################################
+# DOCUMENTUM WEB SERVICE                     #
+##############################################
+documentum.webservice.timeout=30000
+documentum.webservice.upload.url=http://10.10.3.170:8080/WSDCTMUpload/services/DCTMWebServiceImpl
+documentum.webservice.policypdf.url=http://192.168.100.134:8080/QRScannerDMSPdf/documentlist?_n=
+documentum.webservice.document.view.url=http://192.168.100.134:8080/GeneralDoc/controller?source=vgendoc&uid=
+
+##############################################
+# P400 WEB SERVICE                         #
+##############################################
+p400.webservice.address=http://10.10.10.177:8070
+p400.webservice.username=SOAUAT
+p400.webservice.password=SOAUAT
+
+##############################################
+# PROXY                                      #
+##############################################
+proxy.enabled=true
+proxy.host=10.10.3.124
+proxy.port=8080
+proxy.set-credentials=N
+proxy.username=
+proxy.password=
+
+#####################################################
+# SCHEDULER CRON EXPRESSION                         #                                                                  
+# Spring CRON jobs require 6 digits instead of 5    # 
+#####################################################
+scheduler.cron-expression.failed-crm-receipting-batch=0 0 0/2 * * ?
+
+request-encryption-enable=N
+response-encryption-enable=N

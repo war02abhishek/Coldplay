@@ -1,0 +1,37 @@
+<!-- <div class="p-2">
+  <form [formGroup]="viewClaimForm" (ngSubmit)="onSubmit()">
+    <div
+      class="flex flex-col justify-center items-center gap-2 mx-auto max-w-md"
+    >
+      <div class="form-list-item">
+        <label for="claimDetailsId" class="required-field"
+          >Claim Details ID</label
+        >
+        <input
+          id="claimDetailsId"
+          type="text"
+          formControlName="claimDetailsId"
+          placeholder="Enter Claim Details ID"
+        />
+        <div
+          class="errors"
+          *ngIf="
+            viewClaimForm.get('claimDetailsId')?.hasError('required') &&
+            viewClaimForm.get('claimDetailsId')?.touched
+          "
+        >
+          <p>Claim Details ID is required.</p>
+        </div>
+      </div>
+
+      <button type="submit" class="blue-button">Submit</button>
+    </div>
+  </form>
+
+  <div class="mt-6" *ngIf="submitted && selectedContractType === 'CMP'">
+    <app-marine-claim-view></app-marine-claim-view>
+  </div>
+</div> -->
+<div *ngIf="selectedContractType === 'CMP'">
+  <app-marine-claim-view></app-marine-claim-view>
+</div>

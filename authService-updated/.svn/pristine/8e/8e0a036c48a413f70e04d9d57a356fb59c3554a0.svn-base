@@ -1,0 +1,23 @@
+package com.itgi.claim.wrapper;
+
+public class Products {
+
+	private String contractType;
+	private String productName;
+
+	public String getContractType() {
+		return contractType;
+	}
+
+	public void setContractType(String contractType) {
+		this.contractType = contractType;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+}

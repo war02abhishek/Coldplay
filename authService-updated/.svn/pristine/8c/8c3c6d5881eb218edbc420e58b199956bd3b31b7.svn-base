@@ -1,0 +1,177 @@
+package com.itgi.claim.marine.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.itgi.claim.ValidationProperties;
+import com.itgi.claim.marine.service.MarineService;
+import com.itgi.claim.util.APPConstants;
+import com.itgi.claim.wrapper.BillDetails;
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.ClaimDocuments;
+import com.itgi.claim.wrapper.ClaimWrapper;
+import com.itgi.claim.wrapper.FieldError;
+import com.itgi.claim.wrapper.RestResponse;
+
+import io.jsonwebtoken.lang.Collections;
+
+@RestController
+@RequestMapping("/marine")
+public class MarineController {
+
+	private static Logger log = LoggerFactory.getLogger(MarineController.class);
+
+	@Autowired
+	private MarineService marineService;
+
+	@Autowired
+	private ValidationProperties validationProperties;
+
+	@PostMapping(value = "/submit-claim-details", consumes = "application/json")
+	public RestResponse submitClaimDetails(@RequestBody ClaimDetails claimDetails) {
+		List<FieldError> errors = null;
+		try {
+			if (claimDetails == null) {
+				errors = new ArrayList<>();
+				errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+						APPConstants.VALIDATION_FIELD_NAME_ERROR, "Claim details are blank."));
+
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), errors);
+			}
+			String claimDetailsId = marineService.submitClaimDetails(claimDetails);
+			if (StringUtils.isNotBlank(claimDetailsId)) {
+				claimDetails = new ClaimDetails();
+				claimDetails.setClaimDetailsId(claimDetailsId);
+				return new RestResponse(HttpStatus.OK.value(), claimDetails);
+			} else {
+				errors = new ArrayList<>();
+				errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+						APPConstants.VALIDATION_FIELD_NAME_ERROR, validationProperties.runTimeErrorMessage()));
+			}
+
+		} catch (Exception e) {
+			errors = new ArrayList<>();
+			errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+					APPConstants.VALIDATION_FIELD_NAME_ERROR, e.getMessage()));
+		}
+		return new RestResponse(HttpStatus.BAD_REQUEST.value(), errors);
+	}
+
+	@PostMapping(value = "/submit-bill-details", consumes = "application/json")
+	public RestResponse submitBillDetails(@RequestBody BillDetails billDetails) {
+		List<FieldError> errors = null;
+		try {
+			if (billDetails == null) {
+				errors = new ArrayList<>();
+				errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+						APPConstants.VALIDATION_FIELD_NAME_ERROR, "Bill details are blank."));
+
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), errors);
+			}
+			String result = marineService.submitBillDetails(billDetails);
+			if (StringUtils.equalsIgnoreCase(result, APPConstants.SUCCESS)) {
+				return new RestResponse(HttpStatus.OK.value(), result);
+			} else {
+				errors = new ArrayList<>();
+				errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+						APPConstants.VALIDATION_FIELD_NAME_ERROR, validationProperties.runTimeErrorMessage()));
+			}
+
+		} catch (Exception e) {
+			errors = new ArrayList<>();
+			errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+					APPConstants.VALIDATION_FIELD_NAME_ERROR, e.getMessage()));
+		}
+		return new RestResponse(HttpStatus.BAD_REQUEST.value(), errors);
+	}
+
+	@PostMapping(value = "/submit-documents", consumes = "application/json")
+	public RestResponse submitClaimDocuments(@RequestBody List<ClaimDocuments> documentList) {
+		List<FieldError> errors = null;
+		try {
+			if (Collections.isEmpty(documentList)) {
+				errors = new ArrayList<>();
+				errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+						APPConstants.VALIDATION_FIELD_NAME_ERROR, "Documents are blank."));
+
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), errors);
+			}
+			String result = marineService.submitClaimDocuments(documentList);
+			if (StringUtils.equalsIgnoreCase(result, APPConstants.SUCCESS)) {
+				return new RestResponse(HttpStatus.OK.value(), result);
+			} else {
+				errors = new ArrayList<>();
+				errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+						APPConstants.VALIDATION_FIELD_NAME_ERROR, validationProperties.runTimeErrorMessage()));
+			}
+
+		} catch (Exception e) {
+			errors = new ArrayList<>();
+			errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+					APPConstants.VALIDATION_FIELD_NAME_ERROR, e.getMessage()));
+		}
+		return new RestResponse(HttpStatus.BAD_REQUEST.value(), errors);
+	}
+
+	@PostMapping(value = "/update-status", consumes = "application/json")
+	public RestResponse updateStatus(@RequestBody ClaimDetails claimDetails) {
+		log.info("Inside updateStatus() in UserController");
+		try {
+			if (claimDetails == null || StringUtils.isBlank(claimDetails.getL2Status())) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Claim details are blank.");
+			}
+			boolean isUpdated = marineService.updateClaimStatus(claimDetails.getL2Status(), claimDetails.getL2Remarks(),
+					claimDetails.getClaimDetailsId());
+			if (isUpdated) {
+				return new RestResponse(HttpStatus.OK.value(), "Status And Remarks Updated Succesfully.");
+			} else {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Failed to update status.");
+			}
+
+		} catch (Exception e) {
+			log.error("Error inside updateStatus() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping(value = "/view-claim")
+	public RestResponse viewClaimByClaimId(@RequestParam String claimId) {
+		List<FieldError> errors = null;
+		ClaimWrapper claimWrapper = null;
+		try {
+			if (StringUtils.isBlank(claimId)) {
+				errors = new ArrayList<>();
+				errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+						APPConstants.VALIDATION_FIELD_NAME_ERROR, "Claim id is blank."));
+
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), errors);
+			}
+			claimWrapper = marineService.viewClaimByClaimId(claimId);
+			if (claimWrapper != null) {
+				return new RestResponse(HttpStatus.OK.value(), claimWrapper);
+			} else {
+				errors = new ArrayList<>();
+				errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+						APPConstants.VALIDATION_FIELD_NAME_ERROR, validationProperties.runTimeErrorMessage()));
+			}
+
+		} catch (Exception e) {
+			errors = new ArrayList<>();
+			errors.add(new FieldError(APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+					APPConstants.VALIDATION_FIELD_NAME_ERROR, e.getMessage()));
+		}
+		return new RestResponse(HttpStatus.BAD_REQUEST.value(), errors);
+	}
+}

@@ -1,0 +1,110 @@
+<div class="flex-center">
+  <form
+    [formGroup]="changePasswordForm"
+    (ngSubmit)="submitChangePassword()"
+    class="bg-white w-full max-w-sm space-y-5"
+  >
+    <h2 class="green-heading">Change Password</h2>
+    <div class="form-list-item">
+      <label for="oldPassword" class="required-field">Old Password</label>
+      <div class="relative">
+        <input
+          id="oldPassword"
+          [type]="showOldPassword ? 'text' : 'password'"
+          formControlName="oldPassword"
+          placeholder="Enter old password"
+        />
+        <app-password-toggle-button
+          [visible]="showOldPassword"
+          (toggle)="showOldPassword = !showOldPassword"
+        ></app-password-toggle-button>
+      </div>
+      <div class="errors">
+        <p *ngIf="cpf['oldPassword'].invalid && cpf['oldPassword'].touched">
+          Old password is required.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-list-item required">
+      <label for="newPassword" class="required-field">New Password</label>
+      <div class="relative">
+        <input
+          id="newPassword"
+          [type]="showNewPassword ? 'text' : 'password'"
+          formControlName="newPassword"
+          placeholder="Enter new password"
+        />
+        <app-password-toggle-button
+          [visible]="showNewPassword"
+          (toggle)="showNewPassword = !showNewPassword"
+        ></app-password-toggle-button>
+      </div>
+      <div class="errors">
+        <p
+          *ngIf="
+            cpf['newPassword'].touched &&
+            cpf['newPassword'].hasError('required')
+          "
+        >
+          New password is required.
+        </p>
+        <p
+          *ngIf="
+            cpf['newPassword'].touched &&
+            !cpf['newPassword'].hasError('required') &&
+            cpf['newPassword'].hasError('passwordStrength')
+          "
+        >
+          Password strength is weak.
+        </p>
+      </div>
+      <p class="text-xs text-gray-500 mt-1">
+        Password must be at least 8 characters long, and include one uppercase
+        letter, one lowercase letter, one number, and one special character.
+      </p>
+    </div>
+
+    <div class="form-list-item required">
+      <label for="confirmPassword" class="required-field"
+        >Confirm Password</label
+      >
+      <div class="relative">
+        <input
+          id="confirmPassword"
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          placeholder="Confirm new password"
+        />
+        <app-password-toggle-button
+          [visible]="showConfirmPassword"
+          (toggle)="showConfirmPassword = !showConfirmPassword"
+        ></app-password-toggle-button>
+      </div>
+
+      <div class="errors">
+        <p
+          *ngIf="
+            cpf['confirmPassword'].touched &&
+            cpf['confirmPassword'].hasError('required')
+          "
+        >
+          Confirm password is required.
+        </p>
+        <p
+          *ngIf="
+            cpf['confirmPassword'].touched &&
+            !cpf['confirmPassword'].hasError('required') &&
+            changePasswordForm.errors?.['passwordsMismatch']
+          "
+        >
+          Passwords do not match.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex-center">
+      <button type="submit" class="green-button">Change Password</button>
+    </div>
+  </form>
+</div>

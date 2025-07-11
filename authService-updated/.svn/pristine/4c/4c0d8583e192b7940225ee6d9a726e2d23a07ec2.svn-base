@@ -1,0 +1,18 @@
+package com.itgi.claim.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.ListOfValue;
+import com.itgi.claim.wrapper.UserPrincipal;
+
+@Service
+public interface CommonService {
+
+	public List<ListOfValue> getListOfValue(String type) throws Exception;
+
+	public List<ClaimDetails> getListOfClaims(UserPrincipal user) throws Exception;
+
+}

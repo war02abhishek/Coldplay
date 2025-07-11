@@ -1,0 +1,30 @@
+<div
+  *ngIf="isOpen"
+  (click)="close()"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+  style="pointer-events: auto"
+>
+  <div
+    class="relative bg-white rounded-md shadow-lg w-[100%] max-w-[1200px] max-h-[95vh] overflow-y-auto p-6"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Close Button -->
+    <button
+      class="absolute top-2 right-2 cursor-pointer text-gray-600 hover:text-itgi-green text-4xl"
+      (click)="close()"
+      aria-label="Close modal"
+    >
+      &times;
+    </button>
+
+    <!-- Title -->
+    <h2 class="green-heading mb-4" *ngIf="title">
+      {{ title }}
+    </h2>
+
+    <!-- Content -->
+    <div class="text-sm text-gray-800">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+package com.itgi.claim.wrapper;
+
+import java.util.List;
+
+public class ClaimWrapper {
+
+	private ClaimDetails claimDetails;
+	private BillDetails billDetails;
+	private List<ClaimDocuments> claimDocuments;
+
+	public ClaimDetails getClaimDetails() {
+		return claimDetails;
+	}
+
+	public void setClaimDetails(ClaimDetails claimDetails) {
+		this.claimDetails = claimDetails;
+	}
+
+	public BillDetails getBillDetails() {
+		return billDetails;
+	}
+
+	public void setBillDetails(BillDetails billDetails) {
+		this.billDetails = billDetails;
+	}
+
+	public List<ClaimDocuments> getClaimDocuments() {
+		return claimDocuments;
+	}
+
+	public void setClaimDocuments(List<ClaimDocuments> claimDocuments) {
+		this.claimDocuments = claimDocuments;
+	}
+
+}

@@ -1,0 +1,40 @@
+<div class="relative inline-block text-left" #dropdownWrapper>
+  <button
+    type="button"
+    class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 bg-white rounded-sm shadow-sm cursor-pointer outline-2 outline-off-white4 focus:outline-itgi-blue focus:ring-2 focus:ring-[#cceeff] focus:ring-offset-2"
+    (click)="toggleDropdown()"
+  >
+    {{ title }}
+    <svg
+      class="w-4 h-4 ml-2 text-gray-500"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="4"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+
+  <div
+    *ngIf="isOpen"
+    class="absolute right-0 z-10 mt-2 w-48 bg-white rounded-sm shadow-md py-1 text-sm text-gray-700 ring-1 ring-off-white4"
+  >
+    <ng-container *ngFor="let item of items">
+      <button
+        *ngIf="!item.url"
+        (click)="onItemClick(item)"
+        class="w-full text-left px-4 py-2 hover:bg-itgi-blue hover:text-white transition-colors duration-150 cursor-pointer"
+      >
+        {{ item.label }}
+      </button>
+      <a
+        *ngIf="item.url"
+        (click)="onItemClick(item)"
+        class="block px-4 py-2 hover:bg-itgi-blue hover:text-white transition-colors duration-150 cursor-pointer"
+      >
+        {{ item.label }}
+      </a>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resignation Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            width: 100px;
+        }
+        .message {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .note {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .url-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .url-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .footer {
+            text-align: left;
+            font-size: 12px;
+            margin-top: 20px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+         <div class="message">
+            <p>The request with below details have been submitted to you for your approval.</p>
+			<br>
+            <p>***********************************************</p>
+           	<p>Request ID.              : $quoteId</p>
+           	<p>Request Initiated By 	: $userId</p>
+         	<p>Request Details          : Below deviations founds while Issuing Policy.
+         	<p>$deviationList</p>
+           	<p>***********************************************</p>
+           	#if(true)
+	           	<p>Please log in to the portal using the link below to review and take the necessary action.<p>	       		
+       		#end
+       		<a href="http://10.10.2.111:8080/cpm-ui/">Click here</a>
+           	<p>***********************************************</p>
+        <hr>
+        <div class="footer">
+            <p><strong>THIS IS AN AUTO-GENERATED MAIL FROM CPM-Portal. PLEASE DO NOT REPLY.</strong></p>
+            <p>Regards,<br>IFFCO-TOKIO General Insurance Co. Ltd.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<div>
+  <!-- Tab Headers -->
+  <div class="flex justify-center">
+    <div
+      *ngFor="let tab of tabs.toArray(); let i = index"
+      (click)="selectTab(i)"
+      class="cursor-pointer px-4 py-2 text-sm font-semibold border-b-2"
+      [ngClass]="{
+        'bg-itgi-green text-white rounded-t border-off-white4':
+          i === selectedTabIndex,
+        'text-off-black1 hover:bg-off-white3': i !== selectedTabIndex
+      }"
+    >
+      {{ tab.title }}
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="p-4 border border-off-white4 rounded-sm bg-white">
+    <ng-content></ng-content>
+  </div>
+</div>

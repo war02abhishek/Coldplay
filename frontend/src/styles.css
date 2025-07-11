@@ -1,0 +1,25 @@
+/* You can add global styles to this file, and also import other style files */
+@import "./assets/css/simple-notify.css";
+@import "./assets/css/ng-select-new.css";
+@import "tailwindcss";
+@import "./assets/css/custom-tailwind.css";
+@config "../tailwind.config.js";
+
+html {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
+body {
+    font-family: "Poppins", "Inter", "Raleway", sans-serif;
+    font-style: normal;
+    font-size: 14px;
+    font-weight: 400;
+}

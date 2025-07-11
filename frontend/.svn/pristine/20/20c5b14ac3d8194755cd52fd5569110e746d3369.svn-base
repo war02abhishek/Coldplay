@@ -1,0 +1,30 @@
+<div class="w-full mx-auto mb-4 border border-off-white4 rounded">
+  <button
+    type="button"
+    class="w-full text-left px-4 py-3 bg-itgi-green text-white font-bold text-[16px] focus:outline-none flex justify-between items-center cursor-pointer"
+    (click)="isSectionOpen = !isSectionOpen"
+  >
+    <span>{{ title }}</span>
+
+    <!-- Chevron Icons -->
+    <div class="relative w-5 h-5">
+      <img
+        *ngIf="!isSectionOpen"
+        src="/svg/chevron-down.svg"
+        alt="Chevron Down"
+        class="absolute inset-0 w-5 h-5 transition-opacity duration-200"
+      />
+      <img
+        *ngIf="isSectionOpen"
+        src="/svg/chevron-up.svg"
+        alt="Chevron Up"
+        class="absolute inset-0 w-5 h-5 transition-opacity duration-200"
+      />
+    </div>
+  </button>
+
+  <!-- Collapsible Content -->
+  <div *ngIf="isSectionOpen" class="pt-0 p-3 border-t border-off-white4">
+    <ng-content></ng-content>
+  </div>
+</div>

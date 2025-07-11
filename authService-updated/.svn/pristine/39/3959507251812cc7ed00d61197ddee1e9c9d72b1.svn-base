@@ -1,0 +1,52 @@
+package com.itgi.claim.marine.service;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.itgi.claim.marine.dao.MarineDAO;
+import com.itgi.claim.wrapper.BillDetails;
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.ClaimDocuments;
+import com.itgi.claim.wrapper.ClaimWrapper;
+
+@Service
+public class MarineServiceImpl implements MarineService {
+
+	private static Logger log = LoggerFactory.getLogger(MarineServiceImpl.class);
+	
+	@Autowired
+	private MarineDAO marineDAO;
+
+	@Override
+	public String submitClaimDetails(ClaimDetails claimDetails) throws Exception {
+		
+		claimDetails.setReportedDate(new Timestamp(System.currentTimeMillis()));
+		return marineDAO.submitClaimDetails(claimDetails);
+	}
+	
+	@Override
+	public String submitBillDetails(BillDetails billDetails) throws Exception {
+		return marineDAO.submitBillDetails(billDetails);
+	}
+
+	@Override
+	public ClaimWrapper viewClaimByClaimId(String claimId) throws Exception {
+		return marineDAO.viewClaimByClaimId(claimId);
+	}
+
+	@Override
+	public String submitClaimDocuments(List<ClaimDocuments> documentList) throws Exception {
+		return marineDAO.submitClaimDocuments(documentList);
+	}
+
+	@Override
+	public boolean updateClaimStatus(String l2Status, String l2Remarks, String claimDetailsId) throws Exception {
+		return marineDAO.updateClaimStatus(l2Status, l2Remarks, claimDetailsId);
+	}
+
+}

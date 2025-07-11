@@ -1,0 +1,193 @@
+package com.itgi.claim.controller;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.itgi.claim.ValidationProperties;
+import com.itgi.claim.service.UserService;
+import com.itgi.claim.validator.UserValidator;
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.PolicyMapping;
+import com.itgi.claim.wrapper.Privileges;
+import com.itgi.claim.wrapper.RestResponse;
+import com.itgi.claim.wrapper.Roles;
+import com.itgi.claim.wrapper.User;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+	private static Logger log = LoggerFactory.getLogger(UserController.class);
+
+	@Autowired
+	private UserValidator userValidator;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private ValidationProperties validationProperties;
+
+	@GetMapping("/roles")
+	public RestResponse getRoles() {
+		log.info("Inside getRoles() in UserController");
+		try {
+			List<Roles> roles = userService.getRoles();
+
+			if (roles.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error in getting roles.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), roles);
+		} catch (Exception e) {
+			log.error("Error inside getRoles() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/l2-users")
+	public RestResponse getL2Users() {
+		log.info("Inside getL2Users() in UserController");
+		try {
+			List<User> l2Users = userService.getL2User();
+
+			if (l2Users.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error in getting L2 users.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), l2Users);
+		} catch (Exception e) {
+			log.error("Error inside getL2Users() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/l1-users")
+	public RestResponse getL1UsersFromL2(@RequestParam int l2UserId) {
+		log.info("Inside getL1UsersFromL2() in UserController");
+		try {
+			if (l2UserId == 0) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "l2 user id is required.");
+			}
+			List<User> l1UserList = userService.getL1UserFromL2(l2UserId);
+
+			if (l1UserList.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while fetching L1 from L2");
+			}
+			return new RestResponse(HttpStatus.OK.value(), l1UserList);
+		} catch (Exception e) {
+			log.error("Error inside getL1UsersFromL2() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/policy-mapping")
+	public RestResponse getPolicyMapping(@RequestParam int userId) {
+		log.info("Inside getPolicyMapping() in UserController");
+		try {
+			if (userId == 0) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "User Id is blank");
+			}
+
+			List<PolicyMapping> policyList = userService.getPolicyMapping(userId);
+
+			if (policyList.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting policy mapping.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), policyList);
+		} catch (Exception e) {
+			log.error("Error inside getPolicyMapping() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/privileges")
+	public RestResponse getPrivilegesList(@RequestParam(required = false) String roleId) {
+		log.info("Inside getPrivilegesList() in UserController");
+		try {
+			List<Privileges> privilegesList = userService.getPrivilegesList(roleId);
+
+			if (privilegesList.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Privileges.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), privilegesList);
+		} catch (Exception e) {
+			log.error("Error inside getPrivilegesList() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@PostMapping(value = "/privileges-mapping", consumes = "application/json")
+	public RestResponse assignPrivileges(@RequestBody User user) {
+		log.info("Inside assignPrivileges() in UserController");
+		try {
+			boolean isAssigned = userService.assignPrivileges(user);
+			if (isAssigned) {
+				return new RestResponse(HttpStatus.OK.value(), "Privileges assigned Successfully.");
+			} else {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error in assignining privileges.");
+			}
+		} catch (Exception e) {
+			log.error("Error inside assignPrivileges() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@PostMapping(value = "/create-user", consumes = "application/json")
+	public RestResponse createUser(@RequestBody User user) {
+		log.info("Inside createUser() in UserController");
+		try {
+			if (user == null) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "User details are blank.");
+			}
+			user.setPageName("create-user");
+			BindingResult result = new BeanPropertyBindingResult(user, "User");
+			userValidator.validate(user, result);
+			if (result.hasErrors()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(),
+						result.getFieldErrors().get(0).getDefaultMessage());
+			}
+			boolean isCreated = userService.createUser(user);
+			if (isCreated) {
+				return new RestResponse(HttpStatus.OK.value(), "User Created Successfully.");
+			} else {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.userCreationError());
+			}
+
+		} catch (Exception e) {
+			log.error("Error inside createUser() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@PostMapping(value = "/assign-policy", consumes = "application/json")
+	public RestResponse assignPolicy(@RequestBody PolicyMapping policyMapping) {
+		log.info("Inside assignPolicy() in UserController");
+		try {
+			if (policyMapping == null) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Policy details are blank.");
+			}
+			boolean isAssigned = userService.assignPolicy(policyMapping);
+			if (isAssigned) {
+				return new RestResponse(HttpStatus.OK.value(), "Policy Assigned Successfully.");
+			} else {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error in assigning policy");
+			}
+
+		} catch (Exception e) {
+			log.error("Error inside assignPolicy() in UserController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+}

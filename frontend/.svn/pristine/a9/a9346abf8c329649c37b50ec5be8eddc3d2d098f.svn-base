@@ -1,0 +1,149 @@
+<app-tabs-container>
+  <!-- Assign Tab -->
+  <app-tab-element title="Assign Policy Mapping">
+    <form [formGroup]="assignForm" (ngSubmit)="submitAssignForm()">
+      <ul class="form-list">
+        <li class="form-list-item required">
+          <label for="l2User" class="required-field">L2 User</label>
+          <ng-select
+            id="l2User"
+            formControlName="l2User"
+            [items]="l2Users"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select L2 User"
+            (change)="fetchL1Users(assignForm)"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="af['l2User'].touched && af['l2User'].hasError('required')"
+            >
+              L2 User is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item required">
+          <label for="l1User" class="required-field">L1 User</label>
+          <ng-select
+            id="l1User"
+            formControlName="l1User"
+            [items]="l1Users"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select L1 User"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="af['l1User'].touched && af['l1User'].hasError('required')"
+            >
+              L1 User is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item required">
+          <label for="contractType" class="required-field">Contract Type</label>
+          <ng-select
+            id="contractType"
+            formControlName="contractType"
+            [items]="productsList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Contract Type"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                af['contractType'].touched &&
+                af['contractType'].hasError('required')
+              "
+            >
+              Contract Type is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item required">
+          <label for="policyNo" class="required-field">Policy No</label>
+          <input
+            id="policyNo"
+            type="text"
+            formControlName="policyNo"
+            placeholder="Enter Policy No"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                af['policyNo'].touched && af['policyNo'].hasError('required')
+              "
+            >
+              Policy Number is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="flex-center mt-4">
+        <button type="submit" class="green-button">Submit</button>
+      </div>
+    </form>
+  </app-tab-element>
+
+  <!-- View Tab -->
+  <app-tab-element title="View Policy Mapping">
+    <form [formGroup]="viewForm" (ngSubmit)="submitViewForm()">
+      <ul class="form-list">
+        <li class="form-list-item required">
+          <label for="viewL2" class="required-field">L2 User</label>
+          <ng-select
+            id="viewL2"
+            formControlName="l2User"
+            [items]="l2Users"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select L2 User"
+            (change)="fetchL1Users(viewForm)"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="vf['l2User'].touched && vf['l2User'].hasError('required')"
+            >
+              L2 User is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item required">
+          <label for="viewL1" class="required-field">L1 User</label>
+          <ng-select
+            id="viewL1"
+            formControlName="l1User"
+            [items]="l1Users"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select L1 User"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="vf['l1User'].touched && vf['l1User'].hasError('required')"
+            >
+              L1 User is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="flex-center mt-4">
+        <button type="submit" class="blue-button">Submit</button>
+      </div>
+    </form>
+
+    <div *ngIf="tableData.length > 0" class="mt-6">
+      <app-generic-table
+        [data]="tableData"
+        [columns]="tableColumns"
+      ></app-generic-table>
+    </div>
+  </app-tab-element>
+</app-tabs-container>

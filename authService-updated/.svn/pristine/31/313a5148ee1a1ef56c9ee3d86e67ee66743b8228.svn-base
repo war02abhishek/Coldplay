@@ -1,0 +1,138 @@
+package com.itgi.claim.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.itgi.claim.util.APPConstants;
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.ClaimDocuments;
+import com.itgi.claim.wrapper.ListOfValue;
+import com.itgi.claim.wrapper.Products;
+
+@Component
+public class CommonDAOImpl implements CommonDAO {
+
+	@Autowired
+	private BaseDAO baseDAO;
+
+	@Override
+	public List<ClaimDocuments> getDocumentList(String contractType) throws Exception {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<ClaimDocuments> claimDocuments = new ArrayList<>();
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT * FROM CLAIM_PORTAL_DOCUMENTS_MASTER WHERE CONTRACT_TYPE = ? AND ACTIVE = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			preparedStatement.setString(parameterIndex++, contractType);
+			preparedStatement.setString(parameterIndex++, APPConstants.YES);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				ClaimDocuments document = new ClaimDocuments();
+				document.setClaimDocumentId(resultSet.getInt("DOCUMENT_ID"));
+				document.setDocumentName(resultSet.getString("DOCUMENT_NAME"));
+				document.setFormControlField(resultSet.getString("FORM_CONTROL_FIELD"));
+
+				claimDocuments.add(document);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return claimDocuments;
+	}
+
+	@Override
+	public List<Products> getProductList() throws Exception {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Products> products = new ArrayList<>();
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT * FROM CLAIM_PORTAL_PRODUCTS_MASTER ORDER BY PRODUCT_NAME";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Products product = new Products();
+				product.setContractType(resultSet.getString("CONTRACT_TYPE"));
+				product.setProductName(resultSet.getString("PRODUCT_NAME"));
+
+				products.add(product);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return products;
+	}
+
+	@Override
+	public List<ListOfValue> getListOfValue(String type) throws Exception {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<ListOfValue> listOfValues = new ArrayList<>();
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT * FROM CLAIM_PORTAL_CONFIG WHERE TYPE = ? ORDER BY VALUE";
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			preparedStatement.setString(parameterIndex++, type);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				ListOfValue lov = new ListOfValue();
+				lov.setType(resultSet.getString("TYPE"));
+				lov.setSubType(resultSet.getString("SUB_TYPE"));
+				lov.setValue(resultSet.getString("VALUE"));
+
+				listOfValues.add(lov);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return listOfValues;
+	}
+
+	@Override
+	public List<ClaimDetails> getListOfClaims(List<Integer> users) throws Exception {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<ClaimDetails> listOfClaims = new ArrayList<>();
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT * FROM CLAIM_PORTAL_CLAIM_DETAILS WHERE INITIATED_BY_USER_ID = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			for (int userId : users) {
+				preparedStatement.setInt(1, userId);
+				resultSet = preparedStatement.executeQuery();
+				while (resultSet.next()) {
+					ClaimDetails claim = new ClaimDetails();
+					
+					claim.setClaimDetailsId(resultSet.getString("CLAIM_DETAILS_ID"));
+					claim.setItgiClaimNo(resultSet.getString("ITGI_CLAIM_NO"));
+					claim.setPolicyNo(resultSet.getString("POLICY_NO"));
+					claim.setContractType(resultSet.getString("CONTRACT_TYPE"));
+					claim.setInitiatedByUserId(resultSet.getString("INITIATED_BY_USER_ID"));
+					claim.setReportedDate(resultSet.getTimestamp("REPORTED_DATE"));
+					claim.setL2Status(resultSet.getString("L2_STATUS"));
+					claim.setCrmClaimStatus(resultSet.getString("CRM_CLAIM_STATUS"));
+					
+					listOfClaims.add(claim);
+				}
+			}
+			
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return listOfClaims;
+	}
+
+}

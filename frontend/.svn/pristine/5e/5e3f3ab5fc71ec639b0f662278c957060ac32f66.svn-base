@@ -1,0 +1,117 @@
+<app-generic-auth-layout
+  [title]="!showForgotPasswordView ? 'LOGIN' : 'FORGOT PASSWORD'"
+>
+  <!-- Login Form -->
+  <form
+    *ngIf="!showForgotPasswordView"
+    [formGroup]="loginForm"
+    (ngSubmit)="submitLogin()"
+    class="px-3 pb-3"
+  >
+    <!-- Forgot Password Link -->
+    <div class="flex justify-end mt-3 mb-2">
+      <button type="button" class="auth-link" (click)="toggleForgotPassword()">
+        Forgot Password?
+      </button>
+    </div>
+
+    <!-- Username -->
+    <div class="mt-3 mb-2">
+      <label for="username" class="auth-label required-field"> Username </label>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        placeholder="Username"
+        class="auth-input"
+      />
+      <div class="auth-error-container">
+        <div
+          *ngIf="lf['username'].invalid && lf['username'].touched"
+          class="auth-error"
+        >
+          Invalid Username
+        </div>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-2">
+      <label for="password" class="auth-label required-field"> Password </label>
+      <div class="relative">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          id="password"
+          formControlName="password"
+          placeholder="Password"
+          class="auth-input"
+        />
+        <app-password-toggle-button
+          [visible]="showPassword"
+          (toggle)="showPassword = !showPassword"
+        ></app-password-toggle-button>
+      </div>
+      <div class="auth-error-container">
+        <div
+          *ngIf="lf['password'].invalid && lf['password'].touched"
+          class="auth-error"
+        >
+          Invalid Password
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex-center">
+      <button
+        type="submit"
+        [ngClass]="loginForm.invalid ? 'gray-button' : 'green-button'"
+      >
+        LOGIN
+      </button>
+    </div>
+  </form>
+
+  <!-- Forgot Password Form -->
+  <form
+    *ngIf="showForgotPasswordView"
+    [formGroup]="forgotPasswordForm"
+    (ngSubmit)="submitForgotPassword()"
+    class="px-3 pb-3"
+  >
+    <!-- Username -->
+    <div class="mb-2 mt-3">
+      <label for="forgotUsername" class="auth-label required-field">
+        Username
+      </label>
+      <input
+        type="text"
+        id="forgotUsername"
+        formControlName="username"
+        placeholder="Username"
+        class="auth-input"
+      />
+      <div class="auth-error-container">
+        <div
+          *ngIf="fpf['username'].invalid && fpf['username'].touched"
+          class="auth-error"
+        >
+          Invalid Username
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-center gap-4 mt-2">
+      <button
+        type="submit"
+        [ngClass]="forgotPasswordForm.invalid ? 'gray-button' : 'green-button'"
+      >
+        SUBMIT
+      </button>
+      <button type="button" class="red-button" (click)="toggleForgotPassword()">
+        CANCEL
+      </button>
+    </div>
+  </form>
+</app-generic-auth-layout>

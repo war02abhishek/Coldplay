@@ -1,0 +1,91 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.13'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'java'
+	id 'war'
+}
+
+group = 'com.itgi.claim'
+version = '0.0.1-SNAPSHOT'
+
+
+sourceCompatibility = '11'
+targetCompatibility = '11' // Ensures bytecode is Java 11 compatible
+
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+	maven { url "https://plugins.gradle.org/m2/" }
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.boot:spring-boot-dependencies:2.7.4"
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	implementation 'javax.persistence:javax.persistence-api:2.2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
+    implementation 'com.jcraft:jsch:0.1.55'
+	implementation 'com.itextpdf:itextpdf:5.5.13'
+    implementation 'com.itextpdf.tool:xmlworker:5.5.11'
+    implementation 'com.itextpdf:itext7-core:7.1.9'
+    implementation 'com.itextpdf:html2pdf:2.1.6'
+	
+	
+	implementation 'org.apache.commons:commons-digester3:3.2'
+	implementation 'commons-discovery:commons-discovery:0.5'
+	implementation 'org.apache.commons:commons-collections4:4.4'
+	implementation 'org.apache.commons:commons-configuration2:2.5'
+	implementation 'org.apache.commons:commons-lang3:3.9'
+	implementation 'commons-io:commons-io:2.18.0'
+	
+	implementation 'org.apache.axis:axis:1.4'
+	implementation 'org.apache.axis2:axis2:1.8.2'
+	implementation 'org.apache.logging.log4j:log4j-core:2.16.0'
+	implementation 'org.apache.poi:poi:4.1.0'
+	implementation 'org.apache.poi:poi-ooxml:4.1.0'
+	implementation 'org.apache.velocity:velocity-engine-core:2.2'
+
+	implementation 'org.json:json:20180813'
+	
+	implementation 'com.google.guava:guava:28.0-jre'
+	implementation 'com.google.api-client:google-api-client:1.30.2'
+	implementation 'com.google.code.gson:gson:2.8.5'
+	implementation 'com.google.zxing:core:3.3.0'
+	implementation 'com.google.zxing:javase:3.3.0'
+	
+	implementation 'com.ibm.db2:jcc:11.5.0.0'
+	implementation 'com.oracle.database.jdbc:ojdbc8:21.10.0.0'	
+
+	implementation 'com.lowagie:itext:2.1.7'
+
+	implementation 'net.sf.jasperreports:jasperreports:6.9.0'
+
+	implementation 'javax.el:javax.el-api:3.0.0'
+	implementation 'javax.xml:jaxrpc-api:1.1'
+
+	implementation 'wsdl4j:wsdl4j:1.6.2'
+	implementation 'com.auth0:java-jwt:4.4.0'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	
+	
+	runtimeOnly 'com.ibm.db2:jcc'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

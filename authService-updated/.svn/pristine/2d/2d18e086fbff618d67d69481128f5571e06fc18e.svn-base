@@ -1,0 +1,42 @@
+spring.application.name=claim
+spring.profiles.active=dev
+
+# server port
+server.port=7777
+
+#server.servlet.context-path=/CPM
+
+# value
+NotificationService=Y
+smtpHost=10.10.10.75
+smtpPort=25
+smtpFrom=noreply@iffcotokio.co.in
+smtpFromP=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
+
+
+## DB2 settings
+################ Dev
+#spring.datasource.url=jdbc:db2://10.10.2.23:50003/itgi
+#spring.datasource.username=db2inst3
+#spring.datasource.password=db2inst3
+#spring.datasource.driver.class=com.ibm.db2.jcc.DB2Driver
+#spring.datasource.driver-class-name=com.ibm.db2.jcc.DB2Driver
+#spring.datasource.jdbcUrl=jdbc:db2://10.10.2.23:50003/itgi
+
+# Hibernate
+#hibernate.dialect= org.hibernate.dialect.DB2Dialect
+#hibernate.default_schema=ITGI_CPM
+#hibernate.show_sql=false
+#hibernate.hbm2ddl.auto=none
+#spring.jpa.hibernate.ddl-auto=none
+#entitymanager.packagesToScan=com.itgi
+##passing null values in procedure
+#hibernate.proc.param_null_passing=true
+#spring.jpa.properties.hibernate.proc.param_null_passing=true
+
+
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.DB2Dialect
+#spring.hibernate.default_schema=ITGI_CPM
+#spring.hibernate.show_sql=true
+#hibernate.hbm2ddl.auto=none
+#spring.jpa.hibernate.ddl-auto=none

@@ -1,0 +1,67 @@
+<div class="overflow-x-auto">
+  <table class="w-full border border-off-white4 border-collapse text-[13px]">
+    <thead class="bg-dark-blue1 text-white font-semibold">
+      <tr>
+        <th
+          *ngFor="let col of columns"
+          class="border border-off-white4 px-4 py-2 text-center"
+        >
+          {{ col.title }}
+        </th>
+      </tr>
+    </thead>
+    <tbody class="text-gray-800">
+      <ng-container *ngIf="data!.length > 0; else noDataTemplate">
+        <tr
+          *ngFor="
+            let row of data
+              | paginate
+                : { itemsPerPage: itemsPerPage, currentPage: currentPage }
+          "
+          class="hover:bg-off-white1 transition-colors"
+        >
+          <td
+            *ngFor="let col of columns"
+            class="border border-off-white4 px-2 py-1 text-center"
+          >
+            <!-- Handle action object -->
+            <ng-container *ngIf="row[col.key]?.onClick; else plainCell">
+              <button class="blue-button" (click)="handleClick(row[col.key])">
+                {{ row[col.key]?.label }}
+              </button>
+            </ng-container>
+
+            <!-- Fallback for plain text -->
+            <ng-template #plainCell>
+              {{ row[col.key] }}
+            </ng-template>
+          </td>
+        </tr>
+      </ng-container>
+
+      <!-- Template for No Data -->
+      <ng-template #noDataTemplate>
+        <tr>
+          <td
+            [attr.colspan]="columns.length"
+            class="text-center text-sm text-gray-600 py-2 border border-off-white4"
+          >
+            No Data Found
+          </td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+
+  <!-- Pagination Controls -->
+  <div class="flex justify-end mt-3">
+    <pagination-controls
+      (pageChange)="currentPage = $event"
+      class="text-sm"
+      [directionLinks]="true"
+      [autoHide]="true"
+      previousLabel="‹"
+      nextLabel="›"
+    ></pagination-controls>
+  </div>
+</div>

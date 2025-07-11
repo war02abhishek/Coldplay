@@ -1,0 +1,61 @@
+package com.itgi.claim.wrapper;
+
+import java.time.LocalDateTime;
+
+public class PasswordReset {
+
+	private String username;
+	private String token;
+	private LocalDateTime expiryTime;
+	private boolean isConsumed;
+	private LocalDateTime createdTime;
+	private LocalDateTime consumedTime;
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public LocalDateTime getExpiryTime() {
+		return expiryTime;
+	}
+
+	public void setExpiryTime(LocalDateTime expiryTime) {
+		this.expiryTime = expiryTime;
+	}
+
+	public boolean isConsumed() {
+		return isConsumed;
+	}
+
+	public void setIsConsumed(boolean isConsumed) {
+		this.isConsumed = isConsumed;
+	}
+
+	public LocalDateTime getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(LocalDateTime createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public LocalDateTime getConsumedTime() {
+		return consumedTime;
+	}
+
+	public void setConsumedTime(LocalDateTime consumedTime) {
+		this.consumedTime = consumedTime;
+	}
+}

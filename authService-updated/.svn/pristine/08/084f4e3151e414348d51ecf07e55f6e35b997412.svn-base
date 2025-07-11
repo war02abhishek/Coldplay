@@ -1,0 +1,79 @@
+package com.itgi.claim.wrapper;
+
+import java.sql.Timestamp;
+
+public class ClaimDocuments {
+	private String claimDetailsId;
+	private Integer claimDocumentId;
+	private String documentName;
+	private String formControlField;
+	private String fileType;
+	private String fileName;
+	private Timestamp createdDate;
+	private String fileBase64;
+
+	public String getClaimDetailsId() {
+		return claimDetailsId;
+	}
+
+	public void setClaimDetailsId(String claimDetailsId) {
+		this.claimDetailsId = claimDetailsId;
+	}
+
+	public Integer getClaimDocumentId() {
+		return claimDocumentId;
+	}
+
+	public void setClaimDocumentId(Integer claimDocumentId) {
+		this.claimDocumentId = claimDocumentId;
+	}
+
+	public String getDocumentName() {
+		return documentName;
+	}
+
+	public void setDocumentName(String documentName) {
+		this.documentName = documentName;
+	}
+
+	public String getFormControlField() {
+		return formControlField;
+	}
+
+	public void setFormControlField(String formControlField) {
+		this.formControlField = formControlField;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public Timestamp getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getFileBase64() {
+		return fileBase64;
+	}
+
+	public void setFileBase64(String fileBase64) {
+		this.fileBase64 = fileBase64;
+	}
+
+}

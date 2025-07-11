@@ -1,0 +1,44 @@
+#spring:
+#  application:
+#    name: service-registry
+#
+#  kafka:
+#    bootstrap-servers: kafka:9092		
+#  data:
+#    mongodb:
+#      host: mongo
+#      port: 27017
+#      database: test
+#server:
+#  port: 8761
+#
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://service-registry:8761/eureka
+#
+#
+#
+#
+#      
+
+
+
+spring:
+  application:
+    name: service-registry
+
+server:
+  port: 8761
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+

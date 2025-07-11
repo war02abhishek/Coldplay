@@ -1,0 +1,42 @@
+<div class="p-2">
+  <form [formGroup]="claimForm" (ngSubmit)="submitClaimForm()">
+    <div
+      class="flex flex-col justify-center items-center gap-2 mx-auto max-w-md"
+    >
+      <div class="form-list-item">
+        <label for="policyNo" class="required-field">Policy No</label>
+        <ng-select
+          id="policyNo"
+          formControlName="policyNo"
+          [items]="policyList"
+          bindLabel="label"
+          bindValue="value"
+          placeholder="Select Policy No"
+        ></ng-select>
+        <div
+          class="errors"
+          *ngIf="
+            claimForm.get('policyNo')?.hasError('required') &&
+            claimForm.get('policyNo')?.touched
+          "
+        >
+          <p>Policy No is required.</p>
+        </div>
+      </div>
+
+      <button type="submit" class="blue-button">Submit</button>
+    </div>
+  </form>
+
+  <div
+    class="mt-4"
+    *ngIf="
+      claimFormSubmitted &&
+      selectedContractType === constants.CONTRACT_TYPE_MARINE_CMP
+    "
+  >
+    <app-marine-claim-initiate
+      [policyNo]="selectedPolicyNo"
+    ></app-marine-claim-initiate>
+  </div>
+</div>

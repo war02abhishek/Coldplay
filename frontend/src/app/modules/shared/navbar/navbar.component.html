@@ -1,0 +1,32 @@
+<div
+  class="fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-white shadow-md z-30 border-b border-off-white4"
+>
+  <div class="flex items-center gap-6">
+    <img
+      src="/svg/hamburger-menu.svg"
+      alt="Menu"
+      class="h-9 w-9 cursor-pointer hover:opacity-80 transition-opacity duration-150"
+      (click)="toggleSidebar()"
+    />
+
+    <a routerLink="/dashboard/home">
+      <img
+        src="/images/logo.svg"
+        alt="Logo"
+        class="hidden sm:block h-12 cursor-pointer hover:opacity-90 transition-opacity duration-150"
+      />
+    </a>
+  </div>
+
+  <!-- Center: Title -->
+  <!-- <div
+    class="absolute left-1/2 transform -translate-x-1/2 text-dark-blue1 font-extrabold text-xl tracking-wide"
+  >
+    Claim Portal
+  </div> -->
+
+  <app-generic-dropdown
+    [title]="`${roleId} User: ${username}`"
+    [items]="userDropdownItems"
+  ></app-generic-dropdown>
+</div>

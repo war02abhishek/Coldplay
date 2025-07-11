@@ -1,0 +1,90 @@
+<app-tabs-container>
+  <!-- Assign Privilege Tab -->
+  <app-tab-element title="Assign Privilege Mapping">
+    <form [formGroup]="assignForm" (ngSubmit)="submitAssignForm()">
+      <ul class="form-list">
+        <li class="form-list-item required">
+          <label for="roleId" class="required-field">Role</label>
+          <ng-select
+            id="roleId"
+            formControlName="roleId"
+            [items]="roles"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Role"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="af['roleId'].touched && af['roleId'].hasError('required')"
+            >
+              Role is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item required">
+          <label for="privilegeId" class="required-field">Privilege</label>
+          <ng-select
+            id="privilegeId"
+            formControlName="privilegeId"
+            [items]="privileges"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Privilege"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                af['privilegeId'].touched &&
+                af['privilegeId'].hasError('required')
+              "
+            >
+              Privilege is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="flex-center mt-2">
+        <button type="submit" class="green-button">Submit</button>
+      </div>
+    </form>
+  </app-tab-element>
+
+  <!-- View Privilege Tab -->
+  <app-tab-element title="View Privilege Mapping">
+    <form [formGroup]="viewForm" (ngSubmit)="submitViewForm()">
+      <ul class="form-list">
+        <li class="form-list-item required">
+          <label for="viewRoleId" class="required-field">Role</label>
+          <ng-select
+            id="viewRoleId"
+            formControlName="roleId"
+            [items]="roles"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Role"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="vf['roleId'].touched && vf['roleId'].hasError('required')"
+            >
+              Role is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="flex-center mt-2">
+        <button type="submit" class="blue-button">Submit</button>
+      </div>
+    </form>
+
+    <div *ngIf="tableData.length > 0" class="mt-6">
+      <app-generic-table
+        [data]="tableData"
+        [columns]="tableColumns"
+      ></app-generic-table>
+    </div>
+  </app-tab-element>
+</app-tabs-container>

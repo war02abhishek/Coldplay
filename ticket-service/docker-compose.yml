@@ -1,0 +1,152 @@
+version: '3.8'
+
+services:
+  # Zookeeper service used for managing Kafka cluster coordination
+  zookeeper:
+    image: bitnami/zookeeper
+    ports:
+      - "2181:2181"  # Default Zookeeper port
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes  # Allow connections without authentication
+    # networks:
+    #   - kafka-net
+
+  kafka:
+    image: bitnami/kafka
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_MESSAGE_MAX_BYTES=2097152000
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=2097152000
+      - KAFKA_SOCKET_REQUEST_MAX_BYTES=2097152000
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_HEAP_OPTS=-Xmx3g -Xms1g
+    depends_on:
+      - zookeeper
+
+
+  # Redis key-value store
+  redis:
+    image: redis:6.2
+    ports:
+      - "6379:6379"  # Default Redis port
+    # volumes:
+    #   - redis_data:/data  # Persist Redis data
+    # networks:
+    #   - kafka-net
+
+  # MongoDB database
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"  # Default MongoDB port
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root  # Mongo root username
+      MONGO_INITDB_ROOT_PASSWORD: example  # Mongo root password
+    # volumes:
+    #   - mongo_data:/data/db  # Persist MongoDB data
+    healthcheck:  # Used to wait until Mongo is ready before dependent services start
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # networks:
+    #   - kafka-net
+
+  # Mongo Express: Web UI for MongoDB
+  # mongo-express:
+  #   image: mongo-express:1.0.0
+  #   ports:
+  #     - "8081:8081"  # Web UI port
+  #   environment:
+  #     ME_CONFIG_MONGODB_SERVER: mongo
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: example
+  #     ME_CONFIG_BASICAUTH_USERNAME: admin  # Basic auth username for web UI
+  #     ME_CONFIG_BASICAUTH_PASSWORD: admin  # Basic auth password
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy  # Wait until MongoDB is healthy
+  #   networks:
+  #     - kafka-net
+
+  # Eureka Service Registry (for service discovery)
+  service-registry:
+    build:
+      context: ./service-registry  # Path to Dockerfile
+    container_name: service-registry
+    ports:
+      - "8761:8761"  # Eureka dashboard port
+    # networks:
+    #   - kafka-net
+
+  # Ticket service (e.g., booking, issuing)
+  ticket-service:
+    build:
+      context: ./ticket-service
+    container_name: ticket-service
+    ports:
+      - "8089:8089"
+    depends_on:
+      - kafka
+      - service-registry
+    # networks:
+    #   - kafka-net
+
+  # Microservice for ticket processing
+  ticket-processing-service:
+    build:
+      context: ./ticket-processing-service
+    container_name: ticket-processing-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
+      - redis
+      - mongo
+      - service-registry
+    command: ["wait-for-it", "mongo:27017", "--", "java", "-jar", "app.jar"]  # Wait for Mongo before running app
+    # networks:
+    #   - kafka-net
+
+
+  # Notification microservice (e.g., sending emails/SMS)
+  notification-service:
+    build:
+      context: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+      - service-registry
+    # networks:
+    #   - kafka-net
+
+  # API Gateway (currently commented out)
+  # gatewayapi:
+  #   build:
+  #     context: ./gatewayapi
+  #   container_name: gatewayapi
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - service-registry
+  #   networks:
+  #     - kafka-net
+
+# Persistent volume for Redis
+# volumes:
+#   redis_data:
+#   mongo_data:
+
+# Custom network for inter-service communication
+# networks:
+#   kafka-net:
+#     driver: bridge

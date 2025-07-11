@@ -1,0 +1,463 @@
+package com.itgi.claim.wrapper;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+public class ClaimDetails {
+
+	private Date lossDate;
+	private String lossType;
+	private String causeType;
+	private String lossDescription;
+	private Double estimatedLoss;
+	private String geography;
+	private String surveyLocation;
+	private String comment;
+	private String claimSource;
+
+	private String invoiceNo;
+	private String commodity;
+	private Date invoiceDate;
+	private String natureOfPackaging;
+	private String transportedBy;
+	private String transporterName;
+	private String grLrAwvBlNo;
+	private Date grLrAwvBlDate;
+	private String consignmentType;
+	private String port;
+	private String modeOfTransit;
+	private String vesselName;
+
+	private String fromCountry;
+	private String fromCity;
+	private String toCountry;
+	private String toCity;
+
+	private String surveyor;
+	private String insuredClaimRefNo;
+	private String p400CertificateNo;
+	private String insuredRepName;
+	private String repPhone;
+
+	private String claimDetailsId;
+	private String itgiClaimNo;
+	private String policyNo;
+	private String contractType;
+	private String initiatedByUserId;
+	private Timestamp reportedDate;
+	private String l2Status;
+	private String l2Remarks;
+	private String documentumUrl;
+	private String crmInsuredName;
+	private String crmDescription;
+	private Date crmDateOfLoss;
+	private String crmClaimStatus;
+	private String crmRejectionReason;
+	private String crmDealerName;
+	private Date crmDateOfIntimation;
+	private String crmSurveyorName;
+	private Double crmPaidAmount;
+	private Date crmNeftDate;
+	private String crmNeftNo;
+
+	public Date getLossDate() {
+		return lossDate;
+	}
+
+	public void setLossDate(Date lossDate) {
+		this.lossDate = lossDate;
+	}
+
+	public String getLossType() {
+		return lossType;
+	}
+
+	public void setLossType(String lossType) {
+		this.lossType = lossType;
+	}
+
+	public String getCauseType() {
+		return causeType;
+	}
+
+	public void setCauseType(String causeType) {
+		this.causeType = causeType;
+	}
+
+	public String getLossDescription() {
+		return lossDescription;
+	}
+
+	public void setLossDescription(String lossDescription) {
+		this.lossDescription = lossDescription;
+	}
+
+	public Double getEstimatedLoss() {
+		return estimatedLoss;
+	}
+
+	public void setEstimatedLoss(Double estimatedLoss) {
+		this.estimatedLoss = estimatedLoss;
+	}
+
+	public String getGeography() {
+		return geography;
+	}
+
+	public void setGeography(String geography) {
+		this.geography = geography;
+	}
+
+	public String getSurveyLocation() {
+		return surveyLocation;
+	}
+
+	public void setSurveyLocation(String surveyLocation) {
+		this.surveyLocation = surveyLocation;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getClaimSource() {
+		return claimSource;
+	}
+
+	public void setClaimSource(String claimSource) {
+		this.claimSource = claimSource;
+	}
+
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+
+	public String getCommodity() {
+		return commodity;
+	}
+
+	public void setCommodity(String commodity) {
+		this.commodity = commodity;
+	}
+
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+
+	public String getNatureOfPackaging() {
+		return natureOfPackaging;
+	}
+
+	public void setNatureOfPackaging(String natureOfPackaging) {
+		this.natureOfPackaging = natureOfPackaging;
+	}
+
+	public String getTransportedBy() {
+		return transportedBy;
+	}
+
+	public void setTransportedBy(String transportedBy) {
+		this.transportedBy = transportedBy;
+	}
+
+	public String getTransporterName() {
+		return transporterName;
+	}
+
+	public void setTransporterName(String transporterName) {
+		this.transporterName = transporterName;
+	}
+
+	public String getGrLrAwvBlNo() {
+		return grLrAwvBlNo;
+	}
+
+	public void setGrLrAwvBlNo(String grLrAwvBlNo) {
+		this.grLrAwvBlNo = grLrAwvBlNo;
+	}
+
+	public Date getGrLrAwvBlDate() {
+		return grLrAwvBlDate;
+	}
+
+	public void setGrLrAwvBlDate(Date grLrAwvBlDate) {
+		this.grLrAwvBlDate = grLrAwvBlDate;
+	}
+
+	public String getConsignmentType() {
+		return consignmentType;
+	}
+
+	public void setConsignmentType(String consignmentType) {
+		this.consignmentType = consignmentType;
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	public String getModeOfTransit() {
+		return modeOfTransit;
+	}
+
+	public void setModeOfTransit(String modeOfTransit) {
+		this.modeOfTransit = modeOfTransit;
+	}
+
+	public String getVesselName() {
+		return vesselName;
+	}
+
+	public void setVesselName(String vesselName) {
+		this.vesselName = vesselName;
+	}
+
+	public String getFromCountry() {
+		return fromCountry;
+	}
+
+	public void setFromCountry(String fromCountry) {
+		this.fromCountry = fromCountry;
+	}
+
+	public String getFromCity() {
+		return fromCity;
+	}
+
+	public void setFromCity(String fromCity) {
+		this.fromCity = fromCity;
+	}
+
+	public String getToCountry() {
+		return toCountry;
+	}
+
+	public void setToCountry(String toCountry) {
+		this.toCountry = toCountry;
+	}
+
+	public String getToCity() {
+		return toCity;
+	}
+
+	public void setToCity(String toCity) {
+		this.toCity = toCity;
+	}
+
+	public String getSurveyor() {
+		return surveyor;
+	}
+
+	public void setSurveyor(String surveyor) {
+		this.surveyor = surveyor;
+	}
+
+	public String getInsuredClaimRefNo() {
+		return insuredClaimRefNo;
+	}
+
+	public void setInsuredClaimRefNo(String insuredClaimRefNo) {
+		this.insuredClaimRefNo = insuredClaimRefNo;
+	}
+
+	public String getP400CertificateNo() {
+		return p400CertificateNo;
+	}
+
+	public void setP400CertificateNo(String p400CertificateNo) {
+		this.p400CertificateNo = p400CertificateNo;
+	}
+
+	public String getInsuredRepName() {
+		return insuredRepName;
+	}
+
+	public void setInsuredRepName(String insuredRepName) {
+		this.insuredRepName = insuredRepName;
+	}
+
+	public String getRepPhone() {
+		return repPhone;
+	}
+
+	public void setRepPhone(String repPhone) {
+		this.repPhone = repPhone;
+	}
+
+	public String getClaimDetailsId() {
+		return claimDetailsId;
+	}
+
+	public void setClaimDetailsId(String claimDetailsId) {
+		this.claimDetailsId = claimDetailsId;
+	}
+
+	public String getItgiClaimNo() {
+		return itgiClaimNo;
+	}
+
+	public void setItgiClaimNo(String itgiClaimNo) {
+		this.itgiClaimNo = itgiClaimNo;
+	}
+
+	public String getPolicyNo() {
+		return policyNo;
+	}
+
+	public void setPolicyNo(String policyNo) {
+		this.policyNo = policyNo;
+	}
+
+	public String getContractType() {
+		return contractType;
+	}
+
+	public void setContractType(String contractType) {
+		this.contractType = contractType;
+	}
+
+	public String getInitiatedByUserId() {
+		return initiatedByUserId;
+	}
+
+	public void setInitiatedByUserId(String initiatedByUserId) {
+		this.initiatedByUserId = initiatedByUserId;
+	}
+
+	public Timestamp getReportedDate() {
+		return reportedDate;
+	}
+
+	public void setReportedDate(Timestamp reportedDate) {
+		this.reportedDate = reportedDate;
+	}
+
+	public String getL2Status() {
+		return l2Status;
+	}
+
+	public void setL2Status(String l2Status) {
+		this.l2Status = l2Status;
+	}
+
+	public String getL2Remarks() {
+		return l2Remarks;
+	}
+
+	public void setL2Remarks(String l2Remarks) {
+		this.l2Remarks = l2Remarks;
+	}
+
+	public String getDocumentumUrl() {
+		return documentumUrl;
+	}
+
+	public void setDocumentumUrl(String documentumUrl) {
+		this.documentumUrl = documentumUrl;
+	}
+
+	public String getCrmInsuredName() {
+		return crmInsuredName;
+	}
+
+	public void setCrmInsuredName(String crmInsuredName) {
+		this.crmInsuredName = crmInsuredName;
+	}
+
+	public String getCrmDescription() {
+		return crmDescription;
+	}
+
+	public void setCrmDescription(String crmDescription) {
+		this.crmDescription = crmDescription;
+	}
+
+	public Date getCrmDateOfLoss() {
+		return crmDateOfLoss;
+	}
+
+	public void setCrmDateOfLoss(Date crmDateOfLoss) {
+		this.crmDateOfLoss = crmDateOfLoss;
+	}
+
+	public String getCrmClaimStatus() {
+		return crmClaimStatus;
+	}
+
+	public void setCrmClaimStatus(String crmClaimStatus) {
+		this.crmClaimStatus = crmClaimStatus;
+	}
+
+	public String getCrmRejectionReason() {
+		return crmRejectionReason;
+	}
+
+	public void setCrmRejectionReason(String crmRejectionReason) {
+		this.crmRejectionReason = crmRejectionReason;
+	}
+
+	public String getCrmDealerName() {
+		return crmDealerName;
+	}
+
+	public void setCrmDealerName(String crmDealerName) {
+		this.crmDealerName = crmDealerName;
+	}
+
+	public Date getCrmDateOfIntimation() {
+		return crmDateOfIntimation;
+	}
+
+	public void setCrmDateOfIntimation(Date crmDateOfIntimation) {
+		this.crmDateOfIntimation = crmDateOfIntimation;
+	}
+
+	public String getCrmSurveyorName() {
+		return crmSurveyorName;
+	}
+
+	public void setCrmSurveyorName(String crmSurveyorName) {
+		this.crmSurveyorName = crmSurveyorName;
+	}
+
+	public Double getCrmPaidAmount() {
+		return crmPaidAmount;
+	}
+
+	public void setCrmPaidAmount(Double crmPaidAmount) {
+		this.crmPaidAmount = crmPaidAmount;
+	}
+
+	public Date getCrmNeftDate() {
+		return crmNeftDate;
+	}
+
+	public void setCrmNeftDate(Date crmNeftDate) {
+		this.crmNeftDate = crmNeftDate;
+	}
+
+	public String getCrmNeftNo() {
+		return crmNeftNo;
+	}
+
+	public void setCrmNeftNo(String crmNeftNo) {
+		this.crmNeftNo = crmNeftNo;
+	}
+
+}

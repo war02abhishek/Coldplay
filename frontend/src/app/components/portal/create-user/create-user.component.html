@@ -1,0 +1,149 @@
+<div class="flex justify-center">
+  <form
+    [formGroup]="createUserForm"
+    (ngSubmit)="submitCreateUserForm()"
+    class="bg-white w-full space-y-5"
+  >
+    <h2 class="green-heading">Create User</h2>
+    <p class="text-center text-xs text-gray-500">
+      Password must be at least 8 characters long, and include one uppercase
+      letter, one lowercase letter, one number, and one special character.
+    </p>
+    <ul class="form-list">
+      <li class="form-list-item">
+        <label for="roleId" class="required-field">Role ID</label>
+        <ng-select
+          id="roleId"
+          formControlName="roleId"
+          [items]="roles"
+          bindLabel="label"
+          bindValue="value"
+          placeholder="Select Role"
+        ></ng-select>
+        <div class="errors">
+          <p *ngIf="cuf['roleId'].invalid && cuf['roleId'].touched">
+            Role is required.
+          </p>
+        </div>
+      </li>
+
+      <li class="form-list-item">
+        <label for="username" class="required-field">Username</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          placeholder="Enter username"
+        />
+        <div class="errors">
+          <p *ngIf="cuf['username'].invalid && cuf['username'].touched">
+            Username is required.
+          </p>
+        </div>
+      </li>
+
+      <li class="form-list-item">
+        <label for="password" class="required-field">Password</label>
+        <div class="relative">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Enter password"
+          />
+          <app-password-toggle-button
+            [visible]="showPassword"
+            (toggle)="showPassword = !showPassword"
+          ></app-password-toggle-button>
+        </div>
+        <div class="errors">
+          <p
+            *ngIf="
+              cuf['password'].touched && cuf['password'].hasError('required')
+            "
+          >
+            Password is required.
+          </p>
+          <p
+            *ngIf="
+              cuf['password'].touched &&
+              !cuf['password'].hasError('required') &&
+              cuf['password'].hasError('passwordStrength')
+            "
+          >
+            Password strength is weak.
+          </p>
+        </div>
+      </li>
+
+      <li class="form-list-item">
+        <label for="mobile" class="required-field">Mobile</label>
+        <input
+          id="mobile"
+          type="text"
+          formControlName="mobile"
+          placeholder="Enter mobile number"
+        />
+        <div class="errors">
+          <p
+            *ngIf="
+              cuf['mobile'].invalid &&
+              cuf['mobile'].touched &&
+              cuf['mobile'].hasError('required')
+            "
+          >
+            Mobile number is required.
+          </p>
+          <p *ngIf="cuf['mobile'].touched && cuf['mobile'].hasError('pattern')">
+            Enter a valid mobile number.
+          </p>
+        </div>
+      </li>
+
+      <li class="form-list-item">
+        <label for="email" class="required-field">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter email"
+        />
+        <div class="errors">
+          <p
+            *ngIf="
+              cuf['email'].invalid &&
+              cuf['email'].touched &&
+              cuf['email'].hasError('required')
+            "
+          >
+            Email is required.
+          </p>
+          <p *ngIf="cuf['email'].touched && cuf['email'].hasError('email')">
+            Enter a valid email address.
+          </p>
+        </div>
+      </li>
+
+      <li class="form-list-item" *ngIf="cuf['roleId'].value === 'L1'">
+        <label for="parentUserId" class="required-field">Assigned to L2</label>
+        <ng-select
+          id="parentUserId"
+          formControlName="parentUserId"
+          [items]="l2Users"
+          bindLabel="label"
+          bindValue="value"
+          placeholder="Select L2 User"
+        ></ng-select>
+        <div class="errors">
+          <p *ngIf="cuf['parentUserId'].invalid && cuf['parentUserId'].touched">
+            L2 User is required.
+          </p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="flex-center">
+      <button type="submit" class="green-button">Create User</button>
+    </div>
+  </form>
+</div>

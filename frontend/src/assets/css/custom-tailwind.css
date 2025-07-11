@@ -1,0 +1,181 @@
+@layer components {
+
+    /* Unordered list grid layout */
+    .form-list {
+        @apply grid grid-cols-4 gap-4 list-none p-0 my-2;
+    }
+
+    /* Floating label form item inside list */
+    .form-list-item {
+        @apply relative w-full;
+    }
+
+    .form-list-item.width-1 {
+        @apply col-span-1;
+    }
+
+    .form-list-item.width-2 {
+        @apply col-span-2;
+    }
+
+    .form-list-item.width-3 {
+        @apply col-span-3;
+    }
+
+    .form-list-item.width-4 {
+        @apply col-span-4;
+    }
+
+    .form-list-item label {
+        @apply absolute -top-2.5 left-2 bg-white px-1 text-xs text-gray-700 font-semibold z-10;
+    }
+
+    .form-list-item input {
+        @apply w-full rounded-sm p-2.5 text-[12px] outline-2 outline-off-white4 focus:outline-itgi-blue focus:ring-2 focus:ring-[#cceeff] focus:ring-offset-2 bg-white placeholder-gray-400 transition-all duration-400 ease-in-out disabled:bg-off-white2;
+    }
+
+    .form-list-item input[type='file'] {
+        @apply w-full p-2 text-[12px] text-gray-700 bg-white rounded-sm border border-gray-300 cursor-pointer file:mr-3 file:py-[3px] file:px-[6px] file:rounded-sm file:border-0 file:text-sm file:font-medium file:bg-itgi-green file:text-white hover:file:bg-green-400 hover:cursor-pointer transition-all duration-300 ease-in-out;
+    }
+
+    .form-list-item textarea {
+        @apply w-full h-[38px] rounded-sm p-2.5 text-[12px] outline-2 outline-off-white4 focus:outline-itgi-blue focus:ring-2 focus:ring-[#cceeff] focus:ring-offset-2 bg-white placeholder-gray-400 transition-all duration-400 ease-in-out disabled:bg-off-white2 resize-none;
+    }
+
+    .form-list-item .errors {
+        @apply mt-1;
+    }
+
+    .form-list-item .errors p {
+        @apply text-red-600 text-xs;
+    }
+
+    /* View List */
+    .view-list {
+        @apply grid grid-cols-4 gap-4 list-none p-0 my-2;
+    }
+
+    .view-list-item.width-1 {
+        @apply col-span-1;
+    }
+
+    .view-list-item.width-2 {
+        @apply col-span-2;
+    }
+
+    .view-list-item.width-3 {
+        @apply col-span-3;
+    }
+
+    .view-list-item.width-4 {
+        @apply col-span-4;
+    }
+
+    .view-list-item {
+        @apply text-[13px] text-gray-800 bg-white border border-gray-300 rounded-sm px-2.5 py-2 leading-tight;
+        @apply whitespace-pre-wrap break-words;
+    }
+
+    /* Custom Buttons */
+    .green-button {
+        @apply bg-itgi-green uppercase cursor-pointer text-white px-3 py-1.5 rounded-sm text-sm font-medium hover:bg-green-400 transition-colors duration-200;
+    }
+
+    .blue-button {
+        @apply bg-itgi-blue uppercase cursor-pointer text-white px-3 py-1.5 rounded-sm text-sm font-medium hover:bg-blue-400 transition-colors duration-200;
+    }
+
+    .red-button {
+        @apply bg-red-500 uppercase tracking-wide cursor-pointer text-white px-3 py-1.5 rounded-sm text-sm font-medium hover:bg-red-400 transition-colors duration-200;
+    }
+
+    .gray-button {
+        @apply bg-gray-400 uppercase tracking-wide cursor-pointer text-white px-3 py-1.5 rounded-sm text-sm font-medium;
+    }
+
+    /* Headings */
+    .green-heading {
+        @apply text-xl text-center font-bold text-itgi-green;
+    }
+
+    .blue-heading {
+        @apply text-xl text-center font-bold text-itgi-blue;
+    }
+
+    /* Highlighted Box Headings */
+    .highlight-blue-heading {
+        @apply text-center text-lg font-semibold text-itgi-blue bg-blue-50 px-4 py-2 rounded-md shadow-sm border border-blue-200 w-fit mx-auto my-2;
+    }
+
+    /* Flexbox with center alignments */
+    .flex-center {
+        @apply flex justify-center items-center;
+    }
+
+    /* Flexbox with equally spaced alignments */
+    .flex-between {
+        @apply flex justify-between items-center;
+    }
+
+    /* Generic Auth Layout */
+    .auth-bg {
+        @apply flex items-center justify-center h-screen bg-off-white3/50;
+        background: url(/images/itgi-office.jpg) no-repeat 50vw 100vh;
+        background-size: 50vw auto;
+        background-position: 0% 6%;
+    }
+
+    @media screen and (max-width: 640px) {
+        .auth-bg {
+            background-size: auto 130%;
+            background-position: 0% 0%;
+        }
+    }
+
+    .auth-wrapper {
+        @apply w-fit sm:w-1/2 sm:ml-auto p-2 sm:p-0 rounded-lg flex flex-col items-center gap-5;
+    }
+
+    .auth-logo {
+        @apply h-28;
+    }
+
+    .auth-page-title {
+        @apply text-center text-base sm:text-lg font-semibold text-off-black1 tracking-wide;
+    }
+
+    .auth-card {
+        @apply bg-white rounded-xl shadow-2xl w-[320px] overflow-hidden;
+    }
+
+    .auth-card-title {
+        @apply text-white text-lg font-bold px-4 py-2;
+        background: linear-gradient(120deg, #00a959 50%, #00a0e4 50%);
+    }
+
+    .auth-link {
+        @apply text-itgi-blue cursor-pointer text-xs font-semibold underline hover:text-itgi-green transition-colors duration-200;
+    }
+
+    .auth-label {
+        @apply mb-1 block text-sm font-bold text-off-black1;
+    }
+
+    .auth-input {
+        @apply w-full text-sm placeholder-gray-400 p-2 rounded-md border border-gray-200 focus:border-itgi-blue focus:outline-none focus:ring-2 focus:ring-[#cceeff] transition-all duration-300;
+    }
+
+    .auth-error-container {
+        @apply min-h-[20px];
+    }
+
+    .auth-error {
+        @apply text-xs font-semibold text-off-red2;
+    }
+}
+
+.required-field::after {
+    content: ' *';
+    font-weight: 600;
+    color: red;
+}

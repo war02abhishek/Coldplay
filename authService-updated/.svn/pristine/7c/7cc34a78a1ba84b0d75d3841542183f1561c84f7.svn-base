@@ -1,0 +1,525 @@
+package com.itgi.claim.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.itgi.claim.util.APPConstants;
+import com.itgi.claim.wrapper.PasswordReset;
+import com.itgi.claim.wrapper.PolicyMapping;
+import com.itgi.claim.wrapper.Privileges;
+import com.itgi.claim.wrapper.Roles;
+import com.itgi.claim.wrapper.User;
+
+@Component
+public class UserDAOImpl implements UserDAO {
+	private static Logger log = LoggerFactory.getLogger(UserDAOImpl.class);
+
+	@Autowired
+	private BaseDAO baseDAO;
+
+	@Override
+	public User getUser(String username, String password, Connection connection) throws Exception {
+		User userWrapper = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			if (connection == null) {
+				connection = baseDAO.getPortalConnection();
+			}
+			String sql = "SELECT * FROM CLAIM_PORTAL_USERS WHERE" + " USERNAME = ? AND PASSWORD = ? "
+					+ " ORDER BY USERNAME DESC";
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			preparedStatement.setString(parameterIndex++, username);
+			preparedStatement.setString(parameterIndex++, password);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				userWrapper = new User();
+				populateUser(resultSet, userWrapper);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, null);
+		}
+		return userWrapper;
+	}
+
+	private void populateUser(ResultSet resultSet, User userWrapper) throws Exception {
+		userWrapper.setActive(resultSet.getString("ACTIVE"));
+		userWrapper.setCreatedDate(resultSet.getTimestamp("CREATED_DATE"));
+		userWrapper.setEmail(resultSet.getString("EMAIL"));
+		userWrapper.setMobile(resultSet.getString("MOBILE"));
+		userWrapper.setParentUserId(resultSet.getInt("PARENT_USER_ID"));
+		userWrapper.setPassword(resultSet.getString("PASSWORD"));
+		userWrapper.setRoleId(resultSet.getString("ROLE_ID"));
+		userWrapper.setUserId(resultSet.getInt("USER_ID"));
+		userWrapper.setUsername(resultSet.getString("USERNAME"));
+	}
+
+	@Override
+	public List<Privileges> getPrivileges(String roleId, Connection connection) throws Exception {
+		List<Privileges> list = new ArrayList<>();
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		Privileges privilege = null;
+		try {
+			if (connection == null) {
+				connection = baseDAO.getPortalConnection();
+			}
+			String sql = "";
+			if (StringUtils.isNotBlank(roleId)) {
+				sql = "SELECT * FROM CLAIM_PORTAL_PRIVILEGES WHERE PRIVILEGE_ID IN "
+						+ " (SELECT PRIVILEGE_ID FROM CLAIM_PORTAL_ROLES_PRIVILEGES WHERE ROLE_ID = ?) "
+						+ "  AND ACTIVE = ? ORDER BY PRIVILEGE_ID";
+			} else {
+				sql = "SELECT * FROM CLAIM_PORTAL_PRIVILEGES WHERE ACTIVE = ? ORDER BY PRIVILEGE_ID";
+			}
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			if (StringUtils.isNotBlank(roleId)) {
+				preparedStatement.setString(parameterIndex++, roleId);
+			}
+			preparedStatement.setString(parameterIndex++, APPConstants.YES);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				privilege = new Privileges();
+				privilege.setName(resultSet.getString("NAME"));
+				privilege.setPrivilegeId(resultSet.getInt("PRIVILEGE_ID"));
+				privilege.setUrl(resultSet.getString("URL"));
+				privilege.setDisplay(resultSet.getString("DISPLAY"));
+
+				list.add(privilege);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, null);
+		}
+		return list;
+	}
+
+	@Override
+	public boolean createUser(User user) throws Exception {
+		if (log.isInfoEnabled()) {
+			log.info("Inside createUser method");
+		}
+		String sql = "";
+		if (user.getParentUserId() != null) {
+			sql = "INSERT INTO CLAIM_PORTAL_USERS (ROLE_ID, USERNAME, PASSWORD, MOBILE, EMAIL,"
+					+ " PARENT_USER_ID, ACTIVE, CREATED_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		} else {
+			sql = "INSERT INTO CLAIM_PORTAL_USERS (ROLE_ID, USERNAME, PASSWORD, MOBILE, EMAIL,"
+					+ " ACTIVE, CREATED_DATE) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		}
+
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		int status = 0;
+		try {
+			int parameterIndex = 1;
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(parameterIndex++, user.getRoleId());
+			preparedStatement.setString(parameterIndex++, user.getUsername());
+			preparedStatement.setString(parameterIndex++, user.getPassword());
+			preparedStatement.setString(parameterIndex++, user.getMobile());
+			preparedStatement.setString(parameterIndex++, user.getEmail());
+			if (user.getParentUserId() != null) {
+				preparedStatement.setInt(parameterIndex++, user.getParentUserId());
+			}
+			preparedStatement.setString(parameterIndex++, APPConstants.YES);
+			preparedStatement.setTimestamp(parameterIndex++, new Timestamp(System.currentTimeMillis()));
+			status = preparedStatement.executeUpdate();
+			preparedStatement.close();
+
+			if (status > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("Error Inside createUser method: ", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return false;
+	}
+
+	@Override
+	public List<Roles> getRoles() throws Exception {
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		List<Roles> roles = new ArrayList<>();
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT * FROM CLAIM_PORTAL_ROLES";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Roles role = new Roles();
+				role.setRoleId(resultSet.getString("ROLE_ID"));
+				role.setRoleName(resultSet.getString("ROLE_NAME"));
+
+				roles.add(role);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return roles;
+	}
+
+	@Override
+	public List<User> getL2User() throws Exception {
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		List<User> userList = new ArrayList<>();
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT USER_ID, USERNAME FROM CLAIM_PORTAL_USERS WHERE" + " ROLE_ID = ? AND ACTIVE = ? "
+					+ " ORDER BY USERNAME DESC";
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			preparedStatement.setString(parameterIndex++, APPConstants.LEVEL2);
+			preparedStatement.setString(parameterIndex++, APPConstants.YES);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				User user = new User();
+				user.setUserId(resultSet.getInt("USER_ID"));
+				user.setUsername(resultSet.getString("USERNAME"));
+
+				userList.add(user);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return userList;
+	}
+
+	@Override
+	public List<User> getL1UserFromL2(int userId) throws Exception {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<User> userList = new ArrayList<>();
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT USER_ID, USERNAME FROM CLAIM_PORTAL_USERS WHERE"
+					+ " PARENT_USER_ID = ? AND ACTIVE = ? " + " ORDER BY USERNAME DESC";
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			preparedStatement.setInt(parameterIndex++, userId);
+			preparedStatement.setString(parameterIndex++, APPConstants.YES);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				User user = new User();
+				user.setUserId(resultSet.getInt("USER_ID"));
+				user.setUsername(resultSet.getString("USERNAME"));
+
+				userList.add(user);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return userList;
+	}
+
+	@Override
+	public List<PolicyMapping> getPolicyMapping(int userId) throws Exception {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<PolicyMapping> policyList = new ArrayList<>();
+		PolicyMapping policyMapping = null;
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT * FROM CLAIM_PORTAL_POLICY_MAPPING WHERE" + " USER_ID = ? AND ACTIVE = ? ";
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			preparedStatement.setInt(parameterIndex++, userId);
+			preparedStatement.setString(parameterIndex++, APPConstants.YES);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				policyMapping = new PolicyMapping();
+				policyMapping.setContractType(resultSet.getString("CONTRACT_TYPE"));
+				policyMapping.setPolicyNumber(resultSet.getString("ASSIGNED_POLICY_NO"));
+				policyMapping.setUserId(resultSet.getInt("USER_ID"));
+
+				policyList.add(policyMapping);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return policyList;
+	}
+
+	@Override
+	public boolean assignPolicy(PolicyMapping policyMapping) throws Exception {
+		if (log.isInfoEnabled()) {
+			log.info("Inside assignPolicy method");
+		}
+		String sql = "INSERT INTO CLAIM_PORTAL_POLICY_MAPPING (USER_ID, ASSIGNED_POLICY_NO, CONTRACT_TYPE, ACTIVE, CREATED_DATE)"
+				+ " VALUES (?, ?, ?, ?, ?)";
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		int status = 0;
+		try {
+			int parameterIndex = 1;
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(parameterIndex++, policyMapping.getUserId());
+			preparedStatement.setString(parameterIndex++, policyMapping.getPolicyNumber());
+			preparedStatement.setString(parameterIndex++, policyMapping.getContractType());
+			preparedStatement.setString(parameterIndex++, APPConstants.YES);
+			preparedStatement.setTimestamp(parameterIndex++, new Timestamp(System.currentTimeMillis()));
+			status = preparedStatement.executeUpdate();
+			preparedStatement.close();
+
+			if (status > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("Error in assignPolicy: ", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return false;
+	}
+
+	@Override
+	public User getUserByUsername(String username, Connection connection) throws Exception {
+
+		User userWrapper = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			if (connection == null) {
+				connection = baseDAO.getPortalConnection();
+			}
+			String sql = "SELECT * FROM CLAIM_PORTAL_USERS WHERE" + " USERNAME = ? " + " ORDER BY USERNAME DESC";
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			preparedStatement.setString(parameterIndex++, username);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				userWrapper = new User();
+				populateUser(resultSet, userWrapper);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, null);
+		}
+		return userWrapper;
+
+	}
+
+	@Override
+	public boolean changePassword(String username, String password) throws Exception {
+		if (log.isInfoEnabled()) {
+			log.info("############Inside changePassword method.. " + username);
+		}
+		String sql = "UPDATE CLAIM_PORTAL_USERS SET PASSWORD = ? " + " WHERE USERNAME =? ";
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		int isUpdated = 0;
+		try {
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, password);
+			preparedStatement.setString(2, username);
+			isUpdated = preparedStatement.executeUpdate();
+			if (isUpdated > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error("Exception Inside changePassword method :: ", e);
+		} finally {
+			baseDAO.closeJDBCResources(null, null, preparedStatement, connection);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean assignPrivileges(User user) throws Exception {
+		if (log.isInfoEnabled()) {
+			log.info("Inside assignPrivileges method");
+		}
+		String sql = "INSERT INTO CLAIM_PORTAL_ROLES_PRIVILEGES (ROLE_ID, PRIVILEGE_ID, CREATED_DATE)"
+				+ " VALUES (?, ?, ?)";
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		int status = 0;
+		try {
+			int parameterIndex = 1;
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(parameterIndex++, user.getRoleId());
+			preparedStatement.setInt(parameterIndex++, user.getPrivilegeId());
+			preparedStatement.setTimestamp(parameterIndex++, new Timestamp(System.currentTimeMillis()));
+			status = preparedStatement.executeUpdate();
+			preparedStatement.close();
+
+			if (status > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("Error in assignPrivileges: ", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean savePasswordResetToken(PasswordReset prt) throws Exception {
+		if (log.isInfoEnabled()) {
+			log.info("Inside savePasswordResetToken method");
+		}
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		int status = 0;
+		String sql = "INSERT INTO CLAIM_PORTAL_FORGOT_PASSWORD (USERNAME, TOKEN, EXPIRY_TIME, CREATED_TIME) VALUES (?, ?, ?, ?)";
+		try {
+			int parameterIndex = 1;
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(parameterIndex++, prt.getUsername());
+			preparedStatement.setString(parameterIndex++, prt.getToken());
+			preparedStatement.setTimestamp(parameterIndex++, Timestamp.valueOf(prt.getExpiryTime()));
+			preparedStatement.setTimestamp(parameterIndex++, Timestamp.valueOf(prt.getCreatedTime()));
+			status = preparedStatement.executeUpdate();
+			preparedStatement.close();
+
+			if (status > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("Error in savePasswordResetToken: ", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(null, null, preparedStatement, connection);
+		}
+		return false;
+	}
+
+	@Override
+	public PasswordReset findByToken(String token) {
+		if (log.isInfoEnabled()) {
+			log.info("Inside findByToken method");
+		}
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		String sql = "SELECT * FROM CLAIM_PORTAL_FORGOT_PASSWORD WHERE TOKEN = ?";
+		try {
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, token);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				PasswordReset prt = new PasswordReset();
+				prt.setUsername(resultSet.getString("USERNAME"));
+				prt.setToken(resultSet.getString("TOKEN"));
+				prt.setExpiryTime(resultSet.getTimestamp("EXPIRY_TIME").toLocalDateTime());
+				prt.setIsConsumed(
+						StringUtils.equalsIgnoreCase(resultSet.getString("IS_CONSUMED"), APPConstants.YES) ? true
+								: false);
+				prt.setCreatedTime(resultSet.getTimestamp("CREATED_TIME").toLocalDateTime());
+
+				Timestamp usedTs = resultSet.getTimestamp("CONSUMED_TIME");
+				if (usedTs != null) {
+					prt.setConsumedTime(usedTs.toLocalDateTime());
+				}
+				return prt;
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("Error in findByToken: ", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return null;
+	}
+
+	@Override
+	public void markTokenAsUsed(String token, LocalDateTime usedTime) {
+		if (log.isInfoEnabled()) {
+			log.info("Inside markTokenAsUsed method");
+		}
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		String sql = "UPDATE CLAIM_PORTAL_FORGOT_PASSWORD SET IS_CONSUMED = 'Y', CONSUMED_TIME = ? WHERE TOKEN = ?";
+		try {
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setTimestamp(1, Timestamp.valueOf(usedTime));
+			preparedStatement.setString(2, token);
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("Error in markTokenAsUsed: ", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(null, null, preparedStatement, connection);
+		}
+	}
+
+	@Override
+	public List<PasswordReset> findTokenByUsername(String username) {
+		if (log.isInfoEnabled()) {
+			log.info("Inside findTokenByUsername method");
+		}
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		List<PasswordReset> tokens = new ArrayList<>();
+		String sql = "SELECT * FROM CLAIM_PORTAL_FORGOT_PASSWORD WHERE USERNAME = ? ORDER BY CREATED_TIME DESC";
+		try {
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, username);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				PasswordReset prt = new PasswordReset();
+				prt.setUsername(resultSet.getString("USERNAME"));
+				prt.setToken(resultSet.getString("TOKEN"));
+				prt.setExpiryTime(resultSet.getTimestamp("EXPIRY_TIME").toLocalDateTime());
+				prt.setIsConsumed(
+						StringUtils.equalsIgnoreCase(resultSet.getString("IS_CONSUMED"), APPConstants.YES) ? true
+								: false);
+				prt.setCreatedTime(resultSet.getTimestamp("CREATED_TIME").toLocalDateTime());
+
+				Timestamp usedTs = resultSet.getTimestamp("CONSUMED_TIME");
+				if (usedTs != null) {
+					prt.setConsumedTime(usedTs.toLocalDateTime());
+				}
+				tokens.add(prt);
+			}
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("Error in findTokenByUsername: ", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return tokens;
+	}
+
+}

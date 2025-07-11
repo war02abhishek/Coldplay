@@ -1,0 +1,399 @@
+package com.itgi.claim.marine.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.itgi.claim.dao.BaseDAO;
+import com.itgi.claim.util.APPConstants;
+import com.itgi.claim.wrapper.BillDetails;
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.ClaimDocuments;
+import com.itgi.claim.wrapper.ClaimWrapper;
+
+import io.jsonwebtoken.lang.Collections;
+
+@Component
+public class MarineDAOImpl implements MarineDAO {
+
+	private static Logger log = LoggerFactory.getLogger(MarineDAOImpl.class);
+
+	@Autowired
+	private BaseDAO baseDAO;
+
+	@Override
+	public String submitClaimDetails(ClaimDetails claimDetails) throws Exception {
+		if (log.isInfoEnabled()) {
+			log.info("Inside submitClaimDetails method :: policyNumber= " + claimDetails.getPolicyNo()
+					+ " CONTRACT_TYPE= " + claimDetails.getContractType());
+		}
+		String claimDetailsId = "";
+		String sql = "INSERT INTO CLAIM_PORTAL_CLAIM_DETAILS (POLICY_NO, CONTRACT_TYPE, INITIATED_BY_USER_ID, REPORTED_DATE, LOSS_DATE, LOSS_TYPE, CAUSE_TYPE, LOSS_DESCRIPTION, ESTIMATED_LOSS, GEOGRAPHY, SURVEY_LOCATION, COMMENT, SOURCE, INVOICE_NO, COMMODITY, INVOICE_DATE, NATURE_OF_PACKAGING, TRANSPORTED_BY, TRANSPORTER_NAME, GR_LR_AWV_BL_NO, GR_LR_AWV_BL_DATE, CONSIGNMENT_TYPE, PORT, MODE_OF_TRANSIT, VESSEL_NAME, TRANSIT_FROM_COUNTRY, TRANSIT_FROM_CITY, TRANSIT_TO_COUNTRY, TRANSIT_TO_CITY, SURVEYOR, INSURED_CLAIM_REF_NO, P400_CERTIFICATE, INSURED_REP_NAME, PHONE_NO_REP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		try {
+			int parameterIndex = 1;
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(parameterIndex++, claimDetails.getPolicyNo());
+			preparedStatement.setString(parameterIndex++, claimDetails.getContractType());
+			preparedStatement.setString(parameterIndex++, claimDetails.getInitiatedByUserId());
+			preparedStatement.setTimestamp(parameterIndex++, claimDetails.getReportedDate());
+			preparedStatement.setDate(parameterIndex++, new java.sql.Date(claimDetails.getLossDate().getTime()));
+			preparedStatement.setString(parameterIndex++, claimDetails.getLossType());
+			preparedStatement.setString(parameterIndex++, claimDetails.getCauseType());
+			preparedStatement.setString(parameterIndex++, claimDetails.getLossDescription());
+			preparedStatement.setDouble(parameterIndex++, claimDetails.getEstimatedLoss());
+			preparedStatement.setString(parameterIndex++, claimDetails.getGeography());
+			preparedStatement.setString(parameterIndex++, claimDetails.getSurveyLocation());
+			preparedStatement.setString(parameterIndex++, claimDetails.getComment());
+			preparedStatement.setString(parameterIndex++, claimDetails.getClaimSource());
+			preparedStatement.setString(parameterIndex++, claimDetails.getInvoiceNo());
+			preparedStatement.setString(parameterIndex++, claimDetails.getCommodity());
+			preparedStatement.setDate(parameterIndex++, new java.sql.Date(claimDetails.getInvoiceDate().getTime()));
+			preparedStatement.setString(parameterIndex++, claimDetails.getNatureOfPackaging());
+			preparedStatement.setString(parameterIndex++, claimDetails.getTransportedBy());
+			preparedStatement.setString(parameterIndex++, claimDetails.getTransporterName());
+			preparedStatement.setString(parameterIndex++, claimDetails.getGrLrAwvBlNo());
+			preparedStatement.setDate(parameterIndex++, new java.sql.Date(claimDetails.getGrLrAwvBlDate().getTime()));
+			preparedStatement.setString(parameterIndex++, claimDetails.getConsignmentType());
+			preparedStatement.setString(parameterIndex++, claimDetails.getPort());
+			preparedStatement.setString(parameterIndex++, claimDetails.getModeOfTransit());
+			preparedStatement.setString(parameterIndex++, claimDetails.getVesselName());
+
+			preparedStatement.setString(parameterIndex++, claimDetails.getFromCountry());
+			preparedStatement.setString(parameterIndex++, claimDetails.getFromCity());
+			preparedStatement.setString(parameterIndex++, claimDetails.getToCountry());
+			preparedStatement.setString(parameterIndex++, claimDetails.getToCity());
+
+			preparedStatement.setString(parameterIndex++, claimDetails.getSurveyor());
+			preparedStatement.setString(parameterIndex++, claimDetails.getInsuredClaimRefNo());
+			preparedStatement.setString(parameterIndex++, claimDetails.getP400CertificateNo());
+			preparedStatement.setString(parameterIndex++, claimDetails.getInsuredRepName());
+			preparedStatement.setString(parameterIndex++, claimDetails.getRepPhone());
+
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			// get save quote id
+			parameterIndex = 1;
+			sql = "SELECT * FROM CLAIM_PORTAL_CLAIM_DETAILS WHERE REPORTED_DATE = ? ";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setTimestamp(parameterIndex++, claimDetails.getReportedDate());
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				claimDetailsId = resultSet.getString("CLAIM_DETAILS_ID");
+				log.info("Inside submitClaimDetails :: Auto Generated Claim Id is = " + claimDetailsId);
+			}
+			try {
+				connection.rollback();
+			} catch (SQLException ex) {
+			}
+		} catch (Exception e) {
+
+			if (log.isErrorEnabled()) {
+				log.error("Error Inside submitClaimDetails while inserting data in CLAIM_PORTAL_CLAIM_DETAILS", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return claimDetailsId;
+	}
+
+	@Override
+	public String submitBillDetails(BillDetails billDetails) throws Exception {
+
+		if (log.isInfoEnabled()) {
+			log.info("Inside submitBillDetails method :: CLAIM_DETAILS_ID= " + billDetails.getClaimDetailsId());
+		}
+		String sql = "INSERT INTO CLAIM_PORTAL_BILL_DETAILS (" + "CKYC_NO, SUPPLIER_INVOICE_NO, "
+				+ "INSURED_ACCOUNT_NO, INSURED_IFSC_CODE, SOURCE, CRM_CLAIM_NO, PERIPHERAL_BILL_ID, "
+				+ "COST_OF_DAMAGED_CARGO, INSURANCE, FREIGHT, INCIDENTALS, OTHER_DEDUCTION, "
+				+ "SALVAGE, PROPORTIONATE_SHARE, CUSTOM_DUTY, OTHER_OVERHEADS, FRANCHISE, EXCESS"
+				+ ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) WHERE CLAIM_DETAILS_ID = ?";
+
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		ResultSet resultSet = null;
+		int rowInserted = 0;
+		String result = "";
+		try {
+			int parameterIndex = 1;
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(parameterIndex++, billDetails.getCkycNo());
+			preparedStatement.setString(parameterIndex++, billDetails.getSupplierInvoiceNo());
+			preparedStatement.setString(parameterIndex++, billDetails.getInsuredAccNo());
+			preparedStatement.setString(parameterIndex++, billDetails.getInsuredIfscCode());
+			preparedStatement.setString(parameterIndex++, billDetails.getBillSource());
+			preparedStatement.setString(parameterIndex++, billDetails.getCrmClaimNo());
+			preparedStatement.setString(parameterIndex++, billDetails.getPeripheralBillId());
+			preparedStatement.setString(parameterIndex++, billDetails.getCostOfDamagedCargo());
+			preparedStatement.setString(parameterIndex++, billDetails.getInsurance());
+			preparedStatement.setString(parameterIndex++, billDetails.getFreight());
+			preparedStatement.setString(parameterIndex++, billDetails.getIncidentals());
+			preparedStatement.setString(parameterIndex++, billDetails.getOtherDeduction());
+			preparedStatement.setString(parameterIndex++, billDetails.getSalvage());
+			preparedStatement.setString(parameterIndex++, billDetails.getProportionateShare());
+			preparedStatement.setString(parameterIndex++, billDetails.getCustomDuty());
+			preparedStatement.setString(parameterIndex++, billDetails.getOtherOverheads());
+			preparedStatement.setString(parameterIndex++, billDetails.getFranchise());
+			preparedStatement.setString(parameterIndex++, billDetails.getExcess());
+
+			preparedStatement.setString(parameterIndex++, billDetails.getClaimDetailsId());
+
+			rowInserted = preparedStatement.executeUpdate();
+			preparedStatement.close();
+
+			if (rowInserted > 0) {
+				result = "SUCCESS";
+			} else {
+				result = "FAILED";
+			}
+			try {
+				connection.rollback();
+			} catch (SQLException ex) {
+			}
+		} catch (Exception e) {
+			result = "FAILED";
+
+			if (log.isErrorEnabled()) {
+				log.error("Error Inside submitBillDetails while inserting data in CLAIM_PORTAL_BILL_DETAILS", e);
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return result;
+
+	}
+
+	@Override
+	public ClaimWrapper viewClaimByClaimId(String claimId) throws Exception {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		ClaimWrapper claimWrapper = new ClaimWrapper();
+		try {
+			connection = baseDAO.getPortalConnection();
+			String sql = "SELECT * FROM CLAIM_PORTAL_CLAIM_DETAILS AS CLAIM "
+					+ "JOIN CLAIM_PORTAL_BILL_DETAILS AS BILL ON CLAIM.CLAIM_DETAILS_ID = BILL.CLAIM_DETAILS_ID "
+					+ "WHERE CLAIM.CLAIM_DETAILS_ID = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			int parameterIndex = 1;
+			preparedStatement.setString(parameterIndex++, claimId);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				claimWrapper.setClaimDetails(populateClaimDetails(resultSet));
+				claimWrapper.setBillDetails(populateBillDetails(resultSet));
+			} else {
+				return null;
+			}
+
+			if (claimWrapper.getClaimDetails() != null
+					&& StringUtils.isNotBlank(claimWrapper.getClaimDetails().getClaimDetailsId())) {
+				String sql2 = "SELECT * FROM CLAIM_PORTAL_INTIMATION_DOCUMENTS CID JOIN"
+						+ " CLAIM_PORTAL_DOCUMENTS_MASTER CDM ON CID.CLAIM_DOCUMENT_ID = CDM.DOCUMENT_ID"
+						+ " WHERE CLAIM_DETAILS_ID = ?";
+				preparedStatement = connection.prepareStatement(sql2);
+				parameterIndex = 1;
+				preparedStatement.setString(parameterIndex++, claimId);
+				resultSet = preparedStatement.executeQuery();
+				List<ClaimDocuments> documentList = populateClaimDocuments(resultSet);
+
+				if (!Collections.isEmpty(documentList)) {
+					claimWrapper.setClaimDocuments(documentList);
+				}
+			} else {
+				return null;
+			}
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return claimWrapper;
+	}
+
+	private ClaimDetails populateClaimDetails(ResultSet resultSet) throws SQLException {
+		ClaimDetails claim = new ClaimDetails();
+
+		claim.setClaimDetailsId(resultSet.getString("CLAIM_DETAILS_ID"));
+		claim.setItgiClaimNo(resultSet.getString("ITGI_CLAIM_NO"));
+		claim.setPolicyNo(resultSet.getString("POLICY_NO"));
+		claim.setContractType(resultSet.getString("CONTRACT_TYPE"));
+		claim.setInitiatedByUserId(resultSet.getString("INITIATED_BY_USER_ID"));
+		claim.setReportedDate(resultSet.getTimestamp("REPORTED_DATE"));
+		claim.setL2Status(resultSet.getString("L2_STATUS"));
+		claim.setL2Remarks(resultSet.getString("L2_REMARKS"));
+		claim.setDocumentumUrl(resultSet.getString("DOCUMENTUM_URL"));
+		claim.setCrmInsuredName(resultSet.getString("CRM_INSURED_NAME"));
+		claim.setCrmDescription(resultSet.getString("CRM_DESCRIPTION"));
+		claim.setCrmDateOfLoss(resultSet.getDate("CRM_DATE_OF_LOSS"));
+		claim.setCrmClaimStatus(resultSet.getString("CRM_CLAIM_STATUS"));
+		claim.setCrmRejectionReason(resultSet.getString("CRM_REJECTION_REASON"));
+		claim.setCrmDealerName(resultSet.getString("CRM_DEALER_NAME"));
+		claim.setCrmDateOfIntimation(resultSet.getDate("CRM_DATE_OF_INTIMATION"));
+		claim.setCrmSurveyorName(resultSet.getString("CRM_SURVEYOR_NAME"));
+		claim.setCrmPaidAmount(
+				resultSet.getInt("CRM_PAID_AMOUNT") != 0 ? Double.valueOf(resultSet.getInt("CRM_PAID_AMOUNT")) : 0);
+		claim.setCrmNeftDate(resultSet.getDate("CRM_NEFT_DATE"));
+		claim.setCrmNeftNo(resultSet.getString("CRM_NEFT_NO"));
+		claim.setLossDate(resultSet.getDate("LOSS_DATE"));
+		claim.setLossType(resultSet.getString("LOSS_TYPE"));
+		claim.setCauseType(resultSet.getString("CAUSE_TYPE"));
+		claim.setLossDescription(resultSet.getString("LOSS_DESCRIPTION"));
+		claim.setEstimatedLoss(
+				resultSet.getInt("ESTIMATED_LOSS") != 0 ? Double.valueOf(resultSet.getInt("ESTIMATED_LOSS")) : 0);
+		claim.setGeography(resultSet.getString("GEOGRAPHY"));
+		claim.setSurveyLocation(resultSet.getString("SURVEY_LOCATION"));
+		claim.setComment(resultSet.getString("COMMENT"));
+		claim.setClaimSource(resultSet.getString("SOURCE"));
+		claim.setInvoiceNo(resultSet.getString("INVOICE_NO"));
+		claim.setCommodity(resultSet.getString("COMMODITY"));
+		claim.setInvoiceDate(resultSet.getDate("INVOICE_DATE"));
+		claim.setNatureOfPackaging(resultSet.getString("NATURE_OF_PACKAGING"));
+		claim.setTransportedBy(resultSet.getString("TRANSPORTED_BY"));
+		claim.setTransporterName(resultSet.getString("TRANSPORTER_NAME"));
+		claim.setGrLrAwvBlNo(resultSet.getString("GR_LR_AWV_BL_NO"));
+		claim.setGrLrAwvBlDate(resultSet.getDate("GR_LR_AWV_BL_DATE"));
+		claim.setConsignmentType(resultSet.getString("CONSIGNMENT_TYPE"));
+		claim.setPort(resultSet.getString("PORT"));
+		claim.setModeOfTransit(resultSet.getString("MODE_OF_TRANSIT"));
+		claim.setVesselName(resultSet.getString("VESSEL_NAME"));
+		claim.setFromCountry(resultSet.getString("TRANSIT_FROM_COUNTRY"));
+		claim.setFromCity(resultSet.getString("TRANSIT_FROM_CITY"));
+		claim.setToCountry(resultSet.getString("TRANSIT_TO_COUNTRY"));
+		claim.setToCity(resultSet.getString("TRANSIT_TO_CITY"));
+		claim.setSurveyor(resultSet.getString("SURVEYOR"));
+		claim.setInsuredClaimRefNo(resultSet.getString("INSURED_CLAIM_REF_NO"));
+		claim.setP400CertificateNo(resultSet.getString("P400_CERTIFICATE"));
+		claim.setInsuredRepName(resultSet.getString("INSURED_REP_NAME"));
+		claim.setRepPhone(resultSet.getString("PHONE_NO_REP"));
+
+		return claim;
+	}
+
+	private BillDetails populateBillDetails(ResultSet resultSet) throws SQLException {
+		BillDetails bill = new BillDetails();
+
+		bill.setClaimDetailsId(resultSet.getString("CLAIM_DETAILS_ID"));
+		bill.setItgiClaimNo(resultSet.getString("ITGI_CLAIM_NO"));
+		bill.setCrmBillId(resultSet.getString("CRM_BILL_ID"));
+		bill.setCkycNo(resultSet.getString("CKYC_NO"));
+		bill.setSupplierInvoiceNo(resultSet.getString("SUPPLIER_INVOICE_NO"));
+		bill.setInsuredAccNo(resultSet.getString("INSURED_ACCOUNT_NO"));
+		bill.setInsuredIfscCode(resultSet.getString("INSURED_IFSC_CODE"));
+		bill.setBillSource(resultSet.getString("SOURCE"));
+		bill.setCrmClaimNo(resultSet.getString("CRM_CLAIM_NO"));
+		bill.setPeripheralBillId(resultSet.getString("PERIPHERAL_BILL_ID"));
+		bill.setCostOfDamagedCargo(resultSet.getString("COST_OF_DAMAGED_CARGO"));
+		bill.setInsurance(resultSet.getString("INSURANCE"));
+		bill.setFreight(resultSet.getString("FREIGHT"));
+		bill.setIncidentals(resultSet.getString("INCIDENTALS"));
+		bill.setOtherDeduction(resultSet.getString("OTHER_DEDUCTION"));
+		bill.setSalvage(resultSet.getString("SALVAGE"));
+		bill.setProportionateShare(resultSet.getString("PROPORTIONATE_SHARE"));
+		bill.setCustomDuty(resultSet.getString("CUSTOM_DUTY"));
+		bill.setOtherOverheads(resultSet.getString("OTHER_OVERHEADS"));
+		bill.setFranchise(resultSet.getString("FRANCHISE"));
+		bill.setExcess(resultSet.getString("EXCESS"));
+
+		return bill;
+	}
+
+	private List<ClaimDocuments> populateClaimDocuments(ResultSet resultSet) throws SQLException {
+		List<ClaimDocuments> documentList = new ArrayList<>();
+		ClaimDocuments claimDocuments = null;
+		while (resultSet.next()) {
+			claimDocuments = new ClaimDocuments();
+			claimDocuments.setClaimDetailsId(resultSet.getString("CLAIM_DETAILS_ID"));
+			claimDocuments.setClaimDocumentId(resultSet.getInt("CLAIM_DOCUMENT_ID"));
+			claimDocuments.setDocumentName(resultSet.getString("DOCUMENT_NAME"));
+			claimDocuments.setFileBase64(resultSet.getString("FILE_BASE64"));
+			claimDocuments.setFileName(resultSet.getString("FILE_NAME"));
+			claimDocuments.setFileType(resultSet.getString("FILE_TYPE"));
+			documentList.add(claimDocuments);
+		}
+		return documentList;
+	}
+
+	@Override
+	public String submitClaimDocuments(List<ClaimDocuments> documentList) throws Exception {
+		log.info("##### Inside submitClaimDocuments() in MarineDAOImpl: ");
+		String status = "";
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = baseDAO.getPortalConnection();
+
+			for (ClaimDocuments document : documentList) {
+				String sql = "INSERT INTO CLAIM_PORTAL_INTIMATION_DOCUMENTS (CLAIM_DETAILS_ID, CLAIM_DOCUMENT_ID, FILE_NAME"
+						+ ", FILE_TYPE ,FILE_BASE64 ,CREATED_DATE) VALUES (?, ?, ? , ?, ?, ?)";
+				preparedStatement = connection.prepareStatement(sql);
+				int parameterIndex = 1;
+
+				preparedStatement.setString(parameterIndex++, document.getClaimDetailsId());
+				preparedStatement.setInt(parameterIndex++, document.getClaimDocumentId());
+				preparedStatement.setString(parameterIndex++, document.getFileName());
+				preparedStatement.setString(parameterIndex++, document.getFileType());
+				preparedStatement.setString(parameterIndex++, document.getFileBase64());
+				preparedStatement.setTimestamp(parameterIndex++, new Timestamp(System.currentTimeMillis()));
+
+				int rowsInserted = preparedStatement.executeUpdate();
+				if (rowsInserted > 0) {
+					status = "SUCCESS";
+				} else {
+					status = "FAILURE";
+				}
+			}
+
+		} catch (Exception e) {
+			log.error("ERROR IN submitClaimDocuments", e);
+			status = "FAILURE";
+		} finally {
+			baseDAO.closeJDBCResources(resultSet, null, preparedStatement, connection);
+		}
+		return status;
+	}
+
+	@Override
+	public boolean updateClaimStatus(String l2Status, String l2Remarks, String claimDetailsId) throws Exception {
+		if (log.isInfoEnabled()) {
+			log.info("############Inside updateClaimStatus method.. ");
+			log.info("UPDATE CLAIM_PORTAL_CLAIM_DETAILS SET L2_STATUS = " + l2Status + " , L2_REMARKS = " + l2Remarks
+					+ " WHERE CLAIM_DETAILS_ID = " + claimDetailsId);
+		}
+		String sql = "UPDATE CLAIM_PORTAL_CLAIM_DETAILS SET L2_STATUS = ? , L2_REMARKS = ? "
+				+ " WHERE CLAIM_DETAILS_ID =? ";
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		int isUpdated = 0;
+		try {
+			connection = baseDAO.getPortalConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, l2Status);
+			preparedStatement.setString(2, l2Remarks);
+			preparedStatement.setString(3, claimDetailsId);
+			isUpdated = preparedStatement.executeUpdate();
+			if (isUpdated > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error("Exception Inside updateClaimStatus method :: ", e);
+		} finally {
+			baseDAO.closeJDBCResources(null, null, preparedStatement, connection);
+		}
+		return false;
+	}
+
+}

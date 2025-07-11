@@ -1,0 +1,234 @@
+package com.itgi.claim.controller;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.itgi.claim.ValidationProperties;
+import com.itgi.claim.dao.CommonDAO;
+import com.itgi.claim.service.CommonService;
+import com.itgi.claim.wrapper.ClaimDocuments;
+import com.itgi.claim.wrapper.ListOfValue;
+import com.itgi.claim.wrapper.Products;
+import com.itgi.claim.wrapper.RestResponse;
+
+@RestController
+@RequestMapping("/master")
+public class MasterController {
+	private static Logger log = LoggerFactory.getLogger(MasterController.class);
+
+	@Autowired
+	private CommonService commonService;
+
+	@Autowired
+	private CommonDAO commonDAO;
+
+	@Autowired
+	private ValidationProperties validationProperties;
+
+	@GetMapping("/products")
+	public RestResponse getProductList() {
+		log.info("Inside getProductList() in MasterController");
+		try {
+			List<Products> products = commonDAO.getProductList();
+
+			if (products.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Products List.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), products);
+		} catch (Exception e) {
+			log.error("Error inside getProductList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/documents")
+	public RestResponse getDocumentList(@RequestParam String contractType) {
+		log.info("Inside getDocumentList() in getDocumentList: ");
+		try {
+			if (StringUtils.isBlank(contractType)) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.contractTypeRequired());
+			}
+			List<ClaimDocuments> documents = commonDAO.getDocumentList(contractType);
+
+			if (documents.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error retrieving documents list.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), documents);
+		} catch (Exception e) {
+			log.error("Error inside getDocumentList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/loss-type")
+	public RestResponse getLossTypeList() {
+		log.info("Inside getLossTypeList() in MasterController");
+		try {
+
+			String type = "MARINE_LOSS_TYPE";
+			List<ListOfValue> lossTypes = commonService.getListOfValue(type);
+
+			if (lossTypes.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Loss Types.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), lossTypes);
+		} catch (Exception e) {
+			log.error("Error inside getLossTypeList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/cause-type")
+	public RestResponse getCauseTypeList() {
+		log.info("Inside getCauseTypeList() in MasterController");
+		try {
+
+			String type = "MARINE_CAUSE_TYPE";
+			List<ListOfValue> causeTypes = commonService.getListOfValue(type);
+
+			if (causeTypes.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Cause Types.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), causeTypes);
+		} catch (Exception e) {
+			log.error("Error inside getCauseTypeList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+	
+	@GetMapping("/geography")
+	public RestResponse getGeographyList() {
+		log.info("Inside getGeographyList() in MasterController");
+		try {
+
+			String type = "GEOGRAPHY";
+			List<ListOfValue> geographyList = commonService.getListOfValue(type);
+
+			if (geographyList.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Geography List.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), geographyList);
+		} catch (Exception e) {
+			log.error("Error inside getGeographyList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/packaging-nature")
+	public RestResponse getPackagingNatureList() {
+		log.info("Inside getPackagingNatureList() in MasterController");
+		try {
+
+			String type = "MARINE_PACKAGING_NATURE";
+			List<ListOfValue> packagingNature = commonService.getListOfValue(type);
+
+			if (packagingNature.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Packaging natures.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), packagingNature);
+		} catch (Exception e) {
+			log.error("Error inside getPackagingNatureList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/transporting-mode")
+	public RestResponse getTransportingModeList() {
+		log.info("Inside getTransportingModeList() in MasterController");
+		try {
+
+			String type = "MARINE_TRANSPORTED_BY_MODE";
+			List<ListOfValue> transportingMode = commonService.getListOfValue(type);
+
+			if (transportingMode.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting transportation modes.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), transportingMode);
+		} catch (Exception e) {
+			log.error("Error inside getTransportingModeList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/consignment-type")
+	public RestResponse getConsignmentTypeList() {
+		log.info("Inside getConsignmentTypeList() in MasterController");
+		try {
+
+			String type = "MARINE_CONSIGNMENT_TYPE";
+			List<ListOfValue> consignmentType = commonService.getListOfValue(type);
+
+			if (consignmentType.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Consignment types.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), consignmentType);
+		} catch (Exception e) {
+			log.error("Error inside getConsignmentTypeList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/transit-mode")
+	public RestResponse getTransitModeList() {
+		log.info("Inside getTransitModeList() in MasterController");
+		try {
+
+			String type = "MARINE_MODE_OF_TRANSIT";
+			List<ListOfValue> transitMode = commonService.getListOfValue(type);
+
+			if (transitMode.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Transit modes.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), transitMode);
+		} catch (Exception e) {
+			log.error("Error inside getTransitModeList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/vessel-name")
+	public RestResponse getVesselNameList() {
+		log.info("Inside getVesselNameList() in MasterController");
+		try {
+
+			String type = "MARINE_VESSEL_NAME";
+			List<ListOfValue> vesselName = commonService.getListOfValue(type);
+
+			if (vesselName.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Vessel names.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), vesselName);
+		} catch (Exception e) {
+			log.error("Error inside getVesselNameList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+	@GetMapping("/countries")
+	public RestResponse getCountriesList() {
+		log.info("Inside getCountriesList() in MasterController");
+		try {
+
+			String type = "COUNTRY";
+			List<ListOfValue> countries = commonService.getListOfValue(type);
+
+			if (countries.isEmpty()) {
+				return new RestResponse(HttpStatus.BAD_REQUEST.value(), "Error while getting Countries.");
+			}
+			return new RestResponse(HttpStatus.OK.value(), countries);
+		} catch (Exception e) {
+			log.error("Error inside getCountriesList() in MasterController: " + e.getMessage());
+			return new RestResponse(HttpStatus.BAD_REQUEST.value(), validationProperties.exceptionError());
+		}
+	}
+
+}

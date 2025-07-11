@@ -1,0 +1,200 @@
+package com.itgi.claim.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.itgi.claim.ConfigProperties;
+import com.itgi.claim.util.APPConstants;
+
+@Component
+public class BaseDAOImpl implements BaseDAO {
+
+	private static Logger log = LoggerFactory.getLogger(BaseDAOImpl.class);
+
+	@Autowired
+	private ConfigProperties configProperties;
+
+	@Override
+	public synchronized Connection getConnection() throws Exception {
+		try {
+			String useDatasourceForConnection = APPConstants.NO;
+			try {
+				useDatasourceForConnection = configProperties.getString("database.use.datasource");
+			} catch (Exception e) {
+			}
+			Connection connection = null;
+			if (APPConstants.YES.equalsIgnoreCase(useDatasourceForConnection)) {
+				DataSource dataSource = (DataSource) new InitialContext()
+						.lookup(configProperties.getString("database.datasource.name"));
+				connection = dataSource.getConnection();
+			} else {
+				Class.forName(configProperties.getString("database.driver.class"));
+				connection = DriverManager.getConnection(configProperties.getString("database.url"),
+						configProperties.getString("database.user"), configProperties.getString("database.password"));
+			}
+			if (connection != null) {
+				connection.createStatement()
+						.execute("SET SCHEMA " + configProperties.getString("database.schema").toUpperCase());
+			}
+			return connection;
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("", e);
+			}
+			throw new Exception(e);
+		}
+	}
+
+	@Override
+	public synchronized Connection getPortalConnection() throws Exception {
+		try {
+			String useDatasourceForConnection = APPConstants.NO;
+			try {
+				useDatasourceForConnection = configProperties.getString("portal.database.use.datasource");
+			} catch (Exception e) {
+			}
+			Connection connection = null;
+			if (APPConstants.YES.equalsIgnoreCase(useDatasourceForConnection)) {
+				DataSource dataSource = (DataSource) new InitialContext()
+						.lookup(configProperties.getString("portal.database.datasource.name"));
+				connection = dataSource.getConnection();
+			} else {
+				Class.forName(configProperties.getString("portal.database.driver.class"));
+				connection = DriverManager.getConnection(configProperties.getString("portal.database.url"),
+						configProperties.getString("portal.database.user"),
+						configProperties.getString("portal.database.password"));
+			}
+			if (connection != null) {
+				connection.createStatement()
+						.execute("SET SCHEMA " + configProperties.getString("portal.database.schema").toUpperCase());
+			}
+			return connection;
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("", e);
+			}
+			throw new Exception(e);
+		}
+	}
+
+	@Override
+	public void closeJDBCResources(ResultSet resultSet, Statement statement, PreparedStatement preparedStatement,
+			Connection connection) {
+		if (log.isInfoEnabled()) {
+			// log.info("Inside closeJDBCResources method");
+		}
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (Exception e) {
+				resultSet = null;
+				if (log.isErrorEnabled()) {
+					log.error("ERROR when closing Resultset object", e);
+				}
+			}
+			resultSet = null;
+		}
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (Exception e) {
+				statement = null;
+				if (log.isErrorEnabled()) {
+					log.error("ERROR when closing Statement object", e);
+				}
+			}
+			statement = null;
+		}
+		if (preparedStatement != null) {
+			try {
+				preparedStatement.close();
+			} catch (Exception e) {
+				preparedStatement = null;
+				if (log.isErrorEnabled()) {
+					log.error("ERROR when closing PreparedStatement object", e);
+				}
+			}
+			preparedStatement = null;
+		}
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (Exception e) {
+				connection = null;
+				if (log.isErrorEnabled()) {
+					log.error("ERROR when closing Connection object", e);
+				}
+			}
+			connection = null;
+		}
+	}
+
+	@Override
+	public synchronized Connection getCRMConnection() throws Exception {
+		try {
+
+			Connection connection = null;
+
+			Class.forName(configProperties.getString("crm.database.driver.class"));
+			connection = DriverManager.getConnection(configProperties.getString("crm.database.url"),
+					configProperties.getString("crm.database.user"),
+					configProperties.getString("crm.database.password"));
+
+//	    if (connection != null) {
+//		connection.createStatement().execute(
+//			"SET SCHEMA "
+//				+ configProperties.getString("crm.database.schema")
+//					.toUpperCase());
+//	    }
+			return connection;
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("", e);
+			}
+			throw new Exception(e);
+		}
+	}
+
+	@Override
+	public synchronized Connection getSiebelConnection() throws Exception {
+		try {
+			String useDatasourceForConnection = APPConstants.NO;
+			try {
+				useDatasourceForConnection = configProperties.getString("siebel.database.use.datasource");
+			} catch (Exception e) {
+				if (log.isErrorEnabled()) {
+					log.error("Exception occured " + e);
+				}
+			}
+			Connection connection = null;
+			if (APPConstants.YES.equalsIgnoreCase(useDatasourceForConnection)) {
+				DataSource dataSource = (DataSource) new InitialContext()
+						.lookup(configProperties.getString("siebel.database.datasource.name"));
+				connection = dataSource.getConnection();
+			} else {
+				Class.forName(configProperties.getString("siebel.database.driver.class"));
+				connection = DriverManager.getConnection(configProperties.getString("siebel.database.url"),
+						configProperties.getString("siebel.database.user"),
+						configProperties.getString("siebel.database.password"));
+			}
+			return connection;
+		} catch (Exception e) {
+			if (log.isErrorEnabled()) {
+				log.error("Exception occured " + e);
+			}
+			throw new Exception(e);
+		}
+	}
+
+}

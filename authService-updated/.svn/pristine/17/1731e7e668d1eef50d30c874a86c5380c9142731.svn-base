@@ -1,0 +1,45 @@
+package com.itgi.claim.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.itgi.claim.dao.CommonDAO;
+import com.itgi.claim.dao.UserDAO;
+import com.itgi.claim.util.APPConstants;
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.ListOfValue;
+import com.itgi.claim.wrapper.User;
+import com.itgi.claim.wrapper.UserPrincipal;
+
+@Component
+public class CommonServiceImpl implements CommonService {
+
+	@Autowired
+	private CommonDAO commonDAO;
+	
+	@Autowired
+	private UserDAO userDAO;
+	
+	@Override
+	public List<ListOfValue> getListOfValue(String type) throws Exception {
+		return commonDAO.getListOfValue(type);
+	}
+
+	@Override
+	public List<ClaimDetails> getListOfClaims(UserPrincipal user) throws Exception {
+		List<Integer> users = new ArrayList<>();
+		if (StringUtils.equalsIgnoreCase(user.getRoleId(), APPConstants.LEVEL1)) {
+			users.add(user.getUserId());
+		} else if (StringUtils.equalsIgnoreCase(user.getRoleId(), APPConstants.LEVEL2)) {
+			List<User> l1User = userDAO.getL1UserFromL2(user.getUserId());
+			users = l1User.stream().map(User::getUserId).collect(Collectors.toList());
+		}
+		return commonDAO.getListOfClaims(users);
+	}
+
+}

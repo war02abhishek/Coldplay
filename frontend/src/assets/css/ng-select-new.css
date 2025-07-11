@@ -1,0 +1,130 @@
+.ng-select {
+    width: 100%;
+    height: 38px;
+    line-height: normal;
+    font-size: 12px;
+    background-color: #ffffff;
+    outline: 2px solid #ced4da;
+    border-radius: 2px;
+    padding: 10px;
+    padding-right: 0px;
+    transition: outline-color 0.4s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+/* Container styling */
+.ng-select .ng-select-container {
+    border: none;
+    background: transparent;
+    padding: 0;
+    min-height: auto;
+    align-items: center;
+    position: relative;
+}
+
+/* Value container (text input area) */
+.ng-select .ng-value-container {
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Placeholder */
+.ng-select .ng-placeholder {
+    /* color: transparent; */
+    cursor: pointer;
+}
+
+/* When focused */
+.ng-select-focused {
+    box-shadow: 0 0 0 4px #cceeff;
+    outline: 2px solid #00a0e4;
+}
+
+/* Dropdown panel */
+.ng-dropdown-panel {
+    border: 1px solid #ced4da;
+    border-radius: 2px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Dropdown options */
+.ng-option {
+    font-size: 12px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.ng-option-selected {
+    background-color: #00a0e4;
+    color: white;
+}
+
+/* Selected items in multiple select */
+.ng-select.ng-select-multiple .ng-value {
+    background-color: #00a0e4;
+    color: white;
+    border-radius: 2px;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 4px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.ng-select.ng-select-multiple .ng-value .ng-value-icon {
+    color: white;
+    margin-left: 4px;
+    font-size: 12px;
+}
+
+/* Add the ▼ arrow */
+.ng-select .ng-select-container::after {
+    content: '▼';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 10px;
+    color: #555;
+}
+
+/* If you want the arrow to flip when open: */
+/* .ng-select.ng-select-focused .ng-select-container::after {
+    content: '▲';
+} */
+
+
+.ng-select.ng-select-disabled {
+    background-color: #e9e8e8;
+    pointer-events: none;
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+.ng-select.ng-select-disabled .ng-select-container {
+    background-color: transparent;
+}
+
+/* Move the clear (×) button closer to the input text */
+.ng-select .ng-clear-wrapper {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    z-index: 2;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px;
+    color: #999;
+}
+
+.ng-select .ng-clear-wrapper:hover {
+    color: #000;
+}
+
+/* Adjust padding to prevent text from overlapping with clear button */
+.ng-select .ng-value-container {
+    padding-right: 40px;
+}

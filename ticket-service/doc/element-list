@@ -1,0 +1,5 @@
+com.example.ticket_service
+com.example.ticket_service.config
+com.example.ticket_service.controller
+com.example.ticket_service.dto
+com.example.ticket_service.service

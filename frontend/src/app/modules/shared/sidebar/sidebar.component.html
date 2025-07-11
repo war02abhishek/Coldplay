@@ -1,0 +1,45 @@
+<!-- Backdrop -->
+<div
+  *ngIf="sidebarStatus === 'in'"
+  (click)="toggleSidebar()"
+  class="fixed inset-0 bg-off-black1/30 backdrop-blur-sm z-40"
+></div>
+
+<!-- Sidebar -->
+<div
+  [@slideInOut]="sidebarStatus"
+  id="sidebar"
+  class="fixed top-0 left-0 bottom-0 z-45 w-80 bg-white border-r border-off-white4 shadow-lg overflow-y-auto"
+>
+  <!-- Header with Logo and Close -->
+  <div class="flex items-center justify-between p-4 border-b border-off-white4">
+    <div></div>
+    <a routerLink="/dashboard/home">
+      <img src="/images/logo.svg" alt="Logo" class="h-13 cursor-pointer" />
+    </a>
+    <button
+      (click)="toggleSidebar()"
+      class="text-4xl cursor-pointer text-gray-600 hover:text-itgi-green focus:outline-none"
+      aria-label="Close sidebar"
+    >
+      &times;
+    </button>
+  </div>
+
+  <!-- Menu -->
+  <nav class="p-3">
+    <ul class="space-y-1">
+      <li *ngFor="let item of menuItems">
+        <a
+          [routerLink]="item.link"
+          (click)="toggleSidebar()"
+          routerLinkActive="bg-itgi-green text-white"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="block px-4 py-2 text-sm font-bold uppercase text-black rounded hover:bg-itgi-green hover:text-white transition-colors duration-200"
+        >
+          {{ item.title }}
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

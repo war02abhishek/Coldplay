@@ -1,0 +1,319 @@
+<!-- Claim Details -->
+<app-form-section title="Claim Details">
+  <app-form-subsection title="Loss Details">
+    <ul class="view-list">
+      <li class="view-list-item">
+        <strong>Loss Date: </strong>
+        <span>{{ claimDetails.lossDate || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Loss Type: </strong>
+        <span>{{ claimDetails.lossType || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Cause Type: </strong>
+        <span>{{ claimDetails.causeType || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Loss Description: </strong>
+        <span>{{ claimDetails.lossDescription || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Estimated Loss: </strong>
+        <span>{{ claimDetails.estimatedLoss || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Geography: </strong>
+        <span>{{ claimDetails.geography || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Survey Location: </strong>
+        <span>{{ claimDetails.surveyLocation || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Comment: </strong>
+        <span>{{ claimDetails.comment || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Source: </strong>
+        <span>{{ claimDetails.claimSource || "N/A" }}</span>
+      </li>
+    </ul>
+  </app-form-subsection>
+
+  <app-form-subsection title="Marine Details">
+    <ul class="view-list">
+      <li class="view-list-item">
+        <strong>Invoice No: </strong>
+        <span>{{ claimDetails.invoiceNo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Commodity: </strong>
+        <span>{{ claimDetails.commodity || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Invoice Date: </strong>
+        <span>{{ claimDetails.invoiceDate || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Nature of Packaging: </strong>
+        <span>{{ claimDetails.natureOfPackaging || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Transported By: </strong>
+        <span>{{ claimDetails.transportedBy || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Transporter Name: </strong>
+        <span>{{ claimDetails.transporterName || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>GR/LR/AWB/BL No: </strong>
+        <span>{{ claimDetails.grLrAwvBlNo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>GR/LR/AWB/BL Date: </strong>
+        <span>{{ claimDetails.grLrAwvBlDate || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Consignment Type: </strong>
+        <span>{{ claimDetails.consignmentType || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Port: </strong> <span>{{ claimDetails.port || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Mode of Transit: </strong>
+        <span>{{ claimDetails.modeOfTransit || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Vessel Name: </strong>
+        <span>{{ claimDetails.vesselName || "N/A" }}</span>
+      </li>
+    </ul>
+  </app-form-subsection>
+
+  <app-form-subsection title="Transit From">
+    <ul class="view-list">
+      <li class="view-list-item">
+        <strong>Country: </strong>
+        <span>{{ claimDetails.fromCountry || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>City: </strong>
+        <span>{{ claimDetails.fromCity || "N/A" }}</span>
+      </li>
+    </ul>
+  </app-form-subsection>
+
+  <app-form-subsection title="Transit To">
+    <ul class="view-list">
+      <li class="view-list-item">
+        <strong>Country: </strong>
+        <span>{{ claimDetails.toCountry || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>City: </strong> <span>{{ claimDetails.toCity || "N/A" }}</span>
+      </li>
+    </ul>
+  </app-form-subsection>
+
+  <app-form-subsection title="Insurance Details">
+    <ul class="view-list">
+      <li class="view-list-item">
+        <strong>Surveyor: </strong>
+        <span>{{ claimDetails.surveyor || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Insured Claim Ref No: </strong>
+        <span>{{ claimDetails.insuredClaimRefNo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>P400 Certificate No: </strong>
+        <span>{{ claimDetails.p400CertificateNo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Insured Rep Name: </strong>
+        <span>{{ claimDetails.insuredRepName || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Phone No: </strong>
+        <span>{{ claimDetails.repPhone || "N/A" }}</span>
+      </li>
+    </ul>
+  </app-form-subsection>
+</app-form-section>
+
+<!-- Bill Details -->
+<app-form-section title="Bill Details">
+  <app-form-subsection title="Insured Details">
+    <ul class="view-list">
+      <li class="view-list-item">
+        <strong>CKYC No: </strong>
+        <span>{{ billDetails.ckycNo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Supplier Invoice No.: </strong>
+        <span>{{ billDetails.supplierInvoiceNo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Insured Account Num: </strong>
+        <span>{{ billDetails.insuredAccNo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>IFSC Code: </strong>
+        <span>{{ billDetails.insuredIfscCode || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Source: </strong>
+        <span>{{ billDetails.billSource || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>CRM Claim No: </strong>
+        <span>{{ billDetails.crmClaimNo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Peripheral Bill Id: </strong>
+        <span>{{ billDetails.peripheralBillId || "N/A" }}</span>
+      </li>
+    </ul>
+  </app-form-subsection>
+
+  <app-form-subsection title="Claim Calculation">
+    <ul class="view-list">
+      <li class="view-list-item">
+        <strong>Cost of Damaged Cargo: </strong>
+        <span>{{ billDetails.costOfDamagedCargo || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Insurance: </strong>
+        <span>{{ billDetails.insurance || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Freight: </strong>
+        <span>{{ billDetails.freight || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Incidentals: </strong>
+        <span>{{ billDetails.incidentals || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Other Deduction: </strong>
+        <span>{{ billDetails.otherDeduction || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Salvage: </strong>
+        <span>{{ billDetails.salvage || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Proportionate Share: </strong>
+        <span>{{ billDetails.proportionateShare || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Custom Duty: </strong>
+        <span>{{ billDetails.customDuty || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Other Overheads: </strong>
+        <span>{{ billDetails.otherOverheads || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Franchise: </strong>
+        <span>{{ billDetails.franchise || "N/A" }}</span>
+      </li>
+      <li class="view-list-item">
+        <strong>Excess: </strong> <span>{{ billDetails.excess || "N/A" }}</span>
+      </li>
+    </ul>
+  </app-form-subsection>
+</app-form-section>
+
+<!-- Uploaded Documents -->
+<app-form-section title="Uploaded Documents">
+  <app-form-subsection title="Documents">
+    <ul class="view-list grid-cols-2">
+      <li class="view-list-item" *ngFor="let doc of claimDocuments">
+        <strong>{{ doc.documentName }}: </strong>
+        <span>
+          {{ doc.fileName || "N/A" }}
+          <ng-container *ngIf="doc.fileBase64">
+            |
+            <a
+              [href]="'data:' + doc.fileType + ';base64,' + doc.fileBase64"
+              [download]="doc.fileName"
+              class="text-itgi-blue underline ml-1"
+            >
+              Download
+            </a>
+          </ng-container>
+        </span>
+      </li>
+    </ul>
+  </app-form-subsection>
+</app-form-section>
+
+<!-- L2 Remarks -->
+<app-form-section title="Policy Review">
+  <app-form-subsection title="L2 Remarks">
+    <!-- View Only L2 Remarks -->
+    <ul class="view-list" *ngIf="roleId === 'L1'">
+      <li class="view-list-item">
+        <strong>Policy Status:</strong>
+        <span>{{ claimDetails.l2Status || "N/A" }}</span>
+      </li>
+      <li class="view-list-item width-3">
+        <strong>Remarks:</strong>
+        <span>{{ claimDetails.l2Remarks || "N/A" }}</span>
+      </li>
+    </ul>
+    <!-- Editable L2 Remarks -->
+    <form
+      [formGroup]="policyReviewForm"
+      (ngSubmit)="submitRemarksForm()"
+      *ngIf="roleId === 'L2'"
+    >
+      <ul class="form-list">
+        <li class="form-list-item width-1">
+          <label for="policyStatus" class="required-field">Policy Status</label>
+          <ng-select
+            id="policyStatus"
+            formControlName="policyStatus"
+            [items]="policyStatusList"
+            bindLabel="label"
+            bindValue="value"
+            class="form-ng-select"
+            placeholder="Select Status"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                prf['policyStatus']?.hasError('required') &&
+                prf['policyStatus']?.touched
+              "
+            >
+              Policy Status is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item width-3">
+          <label for="remarks" class="required-field">Remarks</label>
+          <input id="remarks" type="text" formControlName="remarks" />
+          <div class="errors">
+            <p
+              *ngIf="
+                prf['remarks']?.hasError('required') && prf['remarks']?.touched
+              "
+            >
+              Remarks are required.
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="flex-center mt-4">
+        <button type="submit" class="green-button">Submit</button>
+      </div>
+    </form>
+  </app-form-subsection>
+</app-form-section>

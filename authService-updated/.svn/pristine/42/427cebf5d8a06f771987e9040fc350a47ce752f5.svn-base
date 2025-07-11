@@ -1,0 +1,46 @@
+package com.itgi.claim.dao;
+
+import java.sql.Connection;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+import com.itgi.claim.wrapper.PasswordReset;
+import com.itgi.claim.wrapper.PolicyMapping;
+import com.itgi.claim.wrapper.Privileges;
+import com.itgi.claim.wrapper.Roles;
+import com.itgi.claim.wrapper.User;
+
+public interface UserDAO {
+
+	public User getUser(String username, String password, Connection connection) throws Exception;
+
+	public List<Privileges> getPrivileges(String roleId, Connection connection) throws Exception;
+
+	public List<User> getL2User() throws Exception;
+
+	public List<User> getL1UserFromL2(int userId) throws Exception;
+
+	public List<PolicyMapping> getPolicyMapping(int userId) throws Exception;
+
+	public boolean assignPolicy(PolicyMapping policyMapping) throws Exception;
+
+	public User getUserByUsername(String username, Connection connection) throws Exception;
+
+	public boolean createUser(User user) throws Exception;
+
+	public boolean changePassword(String username, String password) throws Exception;
+
+	public List<Roles> getRoles() throws Exception;
+
+	public boolean assignPrivileges(User user) throws Exception;
+
+	public boolean savePasswordResetToken(PasswordReset prt) throws Exception;
+
+	public PasswordReset findByToken(String token) throws Exception;
+
+	public void markTokenAsUsed(String token, LocalDateTime usedTime) throws Exception;
+
+	public List<PasswordReset> findTokenByUsername(String username) throws Exception;
+
+}

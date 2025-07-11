@@ -1,0 +1,20 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: auth-service
+  data:
+    mongodb:
+      uri: mongodb+srv://adminColdplay:A0Qmud4BgwVmOsaF@cluster0.w5qkm.mongodb.net/authDB?retryWrites=true&w=majority&appName=Cluster0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+jwt:
+  secret: mySuperSecretKeyForJwtGeneration123456
+  expiration: 86400000 # 1 day in milliseconds

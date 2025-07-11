@@ -1,0 +1,183 @@
+package com.itgi.claim.service;
+
+import java.sql.Connection;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.itgi.claim.dao.BaseDAO;
+import com.itgi.claim.dao.UserDAO;
+import com.itgi.claim.wrapper.PasswordReset;
+import com.itgi.claim.wrapper.PolicyMapping;
+import com.itgi.claim.wrapper.Privileges;
+import com.itgi.claim.wrapper.Roles;
+import com.itgi.claim.wrapper.User;
+import com.itgi.claim.wrapper.UserPrincipal;
+
+@Service
+public class UserServiceImpl implements UserService, UserDetailsService {
+
+	@Autowired
+	private UserDAO userDAO;
+
+	@Autowired
+	private BaseDAO baseDAO;
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = null;
+		try {
+			user = getUserByUsername(username);
+		} catch (Exception e) {
+			throw new UsernameNotFoundException("User not found");
+		}
+		return new UserPrincipal(user);
+	}
+
+	@Override
+	public User getUserByUsernameAndPassword(String username, String password) throws Exception {
+
+		Connection connection = null;
+		User user = null;
+		try {
+			connection = baseDAO.getPortalConnection();
+
+			user = userDAO.getUser(username, password, connection);
+
+			if (user != null) {
+				List<Privileges> list = userDAO.getPrivileges(user.getRoleId(), connection);
+				user.setPrivilages(list);
+
+				if (!list.isEmpty()) {
+					String[] authorities = list.stream().map(Privileges::getUrl).filter(Objects::nonNull)
+							.toArray(String[]::new);
+					user.setAllowedPrivileges(authorities);
+				}
+			}
+		} catch (Exception e) {
+
+		} finally {
+			baseDAO.closeJDBCResources(null, null, null, connection);
+		}
+
+		return user;
+	}
+
+	@Override
+	public User getUserByUsername(String username) throws Exception {
+
+		Connection connection = null;
+		User user = null;
+		try {
+			connection = baseDAO.getPortalConnection();
+
+			user = userDAO.getUserByUsername(username, connection);
+
+			if (user != null) {
+				List<Privileges> list = userDAO.getPrivileges(user.getRoleId(), connection);
+				user.setPrivilages(list);
+
+				if (!list.isEmpty()) {
+					String[] authorities = list.stream().map(Privileges::getUrl).filter(Objects::nonNull)
+							.toArray(String[]::new);
+					user.setAllowedPrivileges(authorities);
+				}
+			}
+		} catch (Exception e) {
+
+		} finally {
+			baseDAO.closeJDBCResources(null, null, null, connection);
+		}
+
+		return user;
+	}
+
+	@Override
+	public List<Roles> getRoles() throws Exception {
+		return userDAO.getRoles();
+	}
+
+	@Override
+	public List<User> getL2User() throws Exception {
+		return userDAO.getL2User();
+	}
+
+	@Override
+	public List<User> getL1UserFromL2(int userId) throws Exception {
+		return userDAO.getL1UserFromL2(userId);
+	}
+
+	@Override
+	public List<PolicyMapping> getPolicyMapping(int userId) throws Exception {
+		return userDAO.getPolicyMapping(userId);
+	}
+
+	@Override
+	public boolean assignPolicy(PolicyMapping policyMapping) throws Exception {
+		return userDAO.assignPolicy(policyMapping);
+	}
+
+	@Override
+	public boolean createUser(User user) throws Exception {
+		if (StringUtils.isNotBlank(user.getPassword())) {
+			BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+			String password = bcrypt.encode(user.getPassword());
+			user.setPassword(password);
+		}
+		return userDAO.createUser(user);
+	}
+
+	@Override
+	public boolean changePasssword(User userWrapper) throws Exception {
+		String password = "";
+		if (StringUtils.isNotBlank(userWrapper.getNewPassword())) {
+			BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+			password = bcrypt.encode(userWrapper.getNewPassword());
+		}
+		return userDAO.changePassword(userWrapper.getUsername(), password);
+	}
+
+	@Override
+	public List<Privileges> getPrivilegesList(String roleId) throws Exception {
+		Connection connection = null;
+		List<Privileges> list = null;
+		try {
+			connection = baseDAO.getPortalConnection();
+			list = userDAO.getPrivileges(roleId, connection);
+		} finally {
+			baseDAO.closeJDBCResources(null, null, null, connection);
+		}
+
+		return list;
+	}
+
+	@Override
+	public boolean assignPrivileges(User user) throws Exception {
+		return userDAO.assignPrivileges(user);
+	}
+
+	@Override
+	public boolean savePasswordResetToken(PasswordReset prt) throws Exception {
+		return userDAO.savePasswordResetToken(prt);
+	}
+
+	@Override
+	public PasswordReset findByToken(String token) throws Exception {
+		return userDAO.findByToken(token);
+	}
+
+	@Override
+	public void markTokenAsUsed(String token, LocalDateTime now) throws Exception {
+		userDAO.markTokenAsUsed(token, now);
+	}
+
+}

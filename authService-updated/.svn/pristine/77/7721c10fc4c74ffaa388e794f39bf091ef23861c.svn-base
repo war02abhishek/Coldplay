@@ -1,0 +1,70 @@
+package com.itgi.claim.wrapper;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+public class UserPrincipal implements UserDetails {
+
+	private static final long serialVersionUID = 195274483827323L;
+
+	private User user;
+
+	public UserPrincipal(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Arrays.stream(this.user.getAllowedPrivileges()).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+	}
+
+	@Override
+	public String getPassword() {
+		return user.getPassword();
+	}
+	
+	public String getRoleId() {
+		return user.getRoleId();
+	}
+	
+	public int getUserId() {
+		return user.getUserId();
+	}
+	
+	public List<Privileges> getPrivileges(){
+		return user.getPrivilages();
+	}
+
+	@Override
+	public String getUsername() {
+		return user.getUsername();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+//				user.isNotLocked();
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return user.isActive();
+	}
+
+}

@@ -1,0 +1,22 @@
+package com.itgi.claim.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public interface BaseDAO {
+
+	public Connection getConnection() throws Exception;
+	
+	public Connection getPortalConnection() throws Exception;
+
+	public Connection getSiebelConnection() throws Exception;
+
+	public void closeJDBCResources(ResultSet resultSet, Statement statement, PreparedStatement preparedStatement, Connection connection);
+
+	public Connection getCRMConnection() throws Exception;
+}

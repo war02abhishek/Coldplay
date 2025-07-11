@@ -1,0 +1,111 @@
+#####################################################
+# SCHEDULER CRON EXPRESSION                         #                                                                  
+# Spring CRON jobs require 6 digits instead of 5    # 
+#####################################################
+scheduler.cron-expression.cache-refresh=0 0 9 * * ?
+scheduler.cron-expression.bankocker-batch=0 0 17 * * ?
+scheduler.cron-expression.motor-breakin-batch=0 0 0/2 * * ?
+scheduler.cron-expression.timeout-transactions=0 0 0/3 * * ?
+scheduler.cron-expression.delete-portal-request-origin-logs-daily=0 0 5 * * ?
+
+#######################################
+# SECURITY CONFIG URLs                #
+#######################################
+superadmin.url=**
+superadmin.roles=SUPERADMIN,OPEN
+itgi.api.url=/authapi/itgi/**
+itgi.api.roles=ITGIADMIN,SUPERADMIN,MOBILE
+breakin.api.url=/authapi/breakin/**
+breakin.api.roles=SUPERADMIN,ADMIN
+mobile.api.url=/authapi/mobile/**
+mobile.api.roles=MOBILE,SUPERADMIN
+paytm.api.url=/authapi/partner/**
+paytm.api.roles=SUPERADMIN,PAYTM
+call.centre.api.roles=CALL_CENTRE,SUPERADMIN
+call.centre.api.url=/callcenter/**
+claim.feedback.api.roles=CLAIM_FEEDBACK,SUPERADMIN
+claim.feedback.api.url=/claim/feedback/**
+
+whitelist.ips=127.0.0.1,0:0:0:0:0:0:0:1
+
+# JWT TOKEN                        #
+####################################
+jwt.secret=iffcotokio
+jwt.token.validity=36000000
+jwt.authorities.key=authorities
+jwt.token.prefix=Bearer
+jwt.token.header=Jwt-Token
+jwt.http.options=OPTIONS
+jwt.arrays.administrtion=User Management Portal
+jwt.issuer=Get Arrays,LLC
+jwt.token.not-verified.message=Token cannot be verified
+jwt.forbidden.message=You need to log in to access this page
+jwt.access.denied.message=You do not have permission to access this page
+jwt.public.urls=/auth/login,/auth/forgot-password,/auth/validate-token,/auth/reset-password
+
+#####################################################
+# SCHEDULER CRON EXPRESSION                         #                                                                  
+# Spring CRON jobs require 6 digits instead of 5    # 
+#####################################################
+scheduler.cron-expression.cache-refresh=0 0 9 * * ?
+scheduler.cron-expression.bankocker-batch=0 0 17 * * ?
+scheduler.cron-expression.motor-breakin-batch=0 0 0/2 * * ?
+scheduler.cron-expression.timeout-transactions=0 0 0/3 * * ?
+scheduler.cron-expression.delete-portal-request-origin-logs-daily=0 0 5 * * ?
+
+##############################################
+# FILE LOCATION                              #
+##############################################
+path.logo.image=/templates/logo.jpg
+path.footer.image=/templates/footer.gif
+path.trans.image=/templates/trans.gif
+path.finalquickclaim.image=/templates/final_quick_claim5.png
+path.ok.image=/templates/checkboxOk.png
+path.notok.image=/templates/checkboxNotOk.png
+path.qrcode.bg.image=/templates/bimaqlik.jpg
+path.corporate.link.qrcode.images=/templates/qrcodeimages/
+
+path.templates.folder=/templates
+
+##############################################
+# GENERAL SETTINGS                           #
+##############################################
+api.default.timeout=15000
+otp.expiry.time.limit=300000
+state-code.kerala=32
+state-name.kerala=KERALA
+state-short-name.kerala=KL
+direct-ho.branch-code=74
+direct-ho.agent-no=74000002
+direct-ho.tieup-no=74000002
+direct-ho.agency-class=ITGI Direct
+direct-ho.branch-client-id=ITGI_HO_BRANCH
+stfc-cpid=ygclsoluzfuccjdpifyrbd8fx6h2xqlt
+request-source.website=WEBSITE
+utm-source.mobile-app=ITGI_CUSTOMER_APP
+otp.limit=5
+kyc.file-extension.allow=pdf,jpeg,jpg,tiff
+last-name.default-value=NA
+wwc.census-type=WCP
+wwc.default-policy-term=1
+web-service.encryption.secret-key=g2t4k6inlFi2XS2g
+web-service-urls.excluded-from-encryption=/auth/secure/,/authapi/itgi/,/authapi/breakin/,/authapi/partner/,/authapi/mobile/,/payment/submit
+
+##############################################
+# MARINE CONFIGURATIONS                      #
+##############################################
+marine.clause-all-risk=A
+marine.clause-basic=B
+marine.max-premium-deviation=5
+
+#RETURN CODE DESCRIPTION
+1=Success
+2=System Error
+3=Authentication Failure
+4=User not authorized
+5=No PANs Entered
+6=User validity has expired
+7=Number of PANs exceeds the limit (5)
+8=Not enough balance
+9=Not an HTTPs request
+10=POST method not used

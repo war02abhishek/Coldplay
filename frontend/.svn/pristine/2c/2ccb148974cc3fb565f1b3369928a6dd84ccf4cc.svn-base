@@ -1,0 +1,968 @@
+<form [formGroup]="claimDetailsForm" (ngSubmit)="submitClaimDetailsForm()">
+  <app-form-section
+    [title]="'Claim Details'"
+    [(isSectionOpen)]="claimSectionOpen"
+  >
+    <p class="highlight-blue-heading">Policy No: {{ policyNo }}</p>
+    <!-- Loss Details -->
+    <app-form-subsection title="Loss Details">
+      <ul class="form-list">
+        <li class="form-list-item">
+          <label for="lossDate" class="required-field">Loss Date</label>
+          <input id="lossDate" type="date" formControlName="lossDate" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['lossDate'].touched && cdf['lossDate'].hasError('required')
+              "
+            >
+              Loss Date is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="lossType" class="required-field">Loss Type</label>
+          <ng-select
+            id="lossType"
+            formControlName="lossType"
+            [items]="lossTypeList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Loss Type"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['lossType'].touched && cdf['lossType'].hasError('required')
+              "
+            >
+              Loss Type is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="causeType" class="required-field">Cause Type</label>
+          <ng-select
+            id="causeType"
+            formControlName="causeType"
+            [items]="causeTypeList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Cause Type"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['causeType'].touched &&
+                cdf['causeType'].hasError('required')
+              "
+            >
+              Cause Type is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="estimatedLoss" class="required-field"
+            >Estimated Loss</label
+          >
+          <input
+            id="estimatedLoss"
+            type="number"
+            formControlName="estimatedLoss"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['estimatedLoss'].touched &&
+                cdf['estimatedLoss'].hasError('required')
+              "
+            >
+              Estimated Loss is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="lossDescription" class="required-field"
+            >Loss Description</label
+          >
+          <input
+            id="lossDescription"
+            type="text"
+            formControlName="lossDescription"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['lossDescription'].touched &&
+                cdf['lossDescription'].hasError('required')
+              "
+            >
+              Loss Description is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="geography" class="required-field">Geography</label>
+          <ng-select
+            id="geography"
+            formControlName="geography"
+            [items]="geographyList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Geography"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['geography'].touched &&
+                cdf['geography'].hasError('required')
+              "
+            >
+              Geography is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="surveyLocation" class="required-field"
+            >Survey Location</label
+          >
+          <input
+            id="surveyLocation"
+            type="text"
+            formControlName="surveyLocation"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['surveyLocation'].touched &&
+                cdf['surveyLocation'].hasError('required')
+              "
+            >
+              Survey Location is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="claimSource" class="required-field">Claim Source</label>
+          <input id="claimSource" type="text" formControlName="claimSource" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['claimSource'].touched &&
+                cdf['claimSource'].hasError('required')
+              "
+            >
+              Claim Source is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item width-4">
+          <label for="comment" class="required-field">Comment</label>
+          <input id="comment" type="text" formControlName="comment" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['comment'].touched && cdf['comment'].hasError('required')
+              "
+            >
+              Comment is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </app-form-subsection>
+
+    <!-- Marine Details -->
+    <app-form-subsection title="Marine Details">
+      <ul class="form-list">
+        <li class="form-list-item">
+          <label for="invoiceNo" class="required-field">Invoice No</label>
+          <input id="invoiceNo" type="text" formControlName="invoiceNo" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['invoiceNo'].touched &&
+                cdf['invoiceNo'].hasError('required')
+              "
+            >
+              Invoice No is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="commodity" class="required-field">Commodity</label>
+          <input id="commodity" type="text" formControlName="commodity" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['commodity'].touched &&
+                cdf['commodity'].hasError('required')
+              "
+            >
+              Commodity is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="invoiceDate" class="required-field">Invoice Date</label>
+          <input id="invoiceDate" type="date" formControlName="invoiceDate" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['invoiceDate'].touched &&
+                cdf['invoiceDate'].hasError('required')
+              "
+            >
+              Invoice Date is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="natureOfPackaging" class="required-field"
+            >Nature of Packaging</label
+          >
+          <ng-select
+            id="natureOfPackaging"
+            formControlName="natureOfPackaging"
+            [items]="natureOfPackagingList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Nature of Packaging"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['natureOfPackaging'].touched &&
+                cdf['natureOfPackaging'].hasError('required')
+              "
+            >
+              Nature of Packaging is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="transportedBy" class="required-field"
+            >Transported By</label
+          >
+          <ng-select
+            id="transportedBy"
+            formControlName="transportedBy"
+            [items]="transportedByModeList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Transported By"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['transportedBy'].touched &&
+                cdf['transportedBy'].hasError('required')
+              "
+            >
+              Transported By is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="transporterName" class="required-field"
+            >Transporter Name</label
+          >
+          <input
+            id="transporterName"
+            type="text"
+            formControlName="transporterName"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['transporterName'].touched &&
+                cdf['transporterName'].hasError('required')
+              "
+            >
+              Transporter Name is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="grLrAwvBlNo" class="required-field"
+            >GR/ LR/AWV/BL No</label
+          >
+          <input id="grLrAwvBlNo" type="text" formControlName="grLrAwvBlNo" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['grLrAwvBlNo'].touched &&
+                cdf['grLrAwvBlNo'].hasError('required')
+              "
+            >
+              GR/ LR/AWV/BL No is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="grLrAwvBlDate" class="required-field"
+            >GR/ LR/AWV/BL Date</label
+          >
+          <input
+            id="grLrAwvBlDate"
+            type="date"
+            formControlName="grLrAwvBlDate"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['grLrAwvBlDate'].touched &&
+                cdf['grLrAwvBlDate'].hasError('required')
+              "
+            >
+              GR/ LR/AWV/BL Date is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="consignmentType" class="required-field"
+            >Consignment Type</label
+          >
+          <ng-select
+            id="consignmentType"
+            formControlName="consignmentType"
+            [items]="consignmentTypeList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Consignment Type"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['consignmentType'].touched &&
+                cdf['consignmentType'].hasError('required')
+              "
+            >
+              Consignment Type is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="port" class="required-field">Port</label>
+          <input id="port" type="text" formControlName="port" />
+          <div class="errors">
+            <p *ngIf="cdf['port'].touched && cdf['port'].hasError('required')">
+              Port is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="modeOfTransit" class="required-field"
+            >Mode of Transit</label
+          >
+          <ng-select
+            id="modeOfTransit"
+            formControlName="modeOfTransit"
+            [items]="modeOfTransitList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Mode of Transit"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['modeOfTransit'].touched &&
+                cdf['modeOfTransit'].hasError('required')
+              "
+            >
+              Mode of Transit is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="vesselName" class="required-field">Vessel Name</label>
+          <ng-select
+            id="vesselName"
+            formControlName="vesselName"
+            [items]="vesselNameList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Vessel Name"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['vesselName'].touched &&
+                cdf['vesselName'].hasError('required')
+              "
+            >
+              Vessel Name is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </app-form-subsection>
+
+    <!-- Transit From -->
+    <app-form-subsection title="Transit From">
+      <ul class="form-list">
+        <li class="form-list-item">
+          <label for="fromCountry" class="required-field">Country</label>
+          <ng-select
+            id="fromCountry"
+            formControlName="fromCountry"
+            [items]="countriesList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Country"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['fromCountry'].touched &&
+                cdf['fromCountry'].hasError('required')
+              "
+            >
+              Country is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="fromCity" class="required-field">City</label>
+          <input id="fromCity" type="text" formControlName="fromCity" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['fromCity'].touched && cdf['fromCity'].hasError('required')
+              "
+            >
+              City is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </app-form-subsection>
+
+    <!-- Transit To -->
+    <app-form-subsection title="Transit To">
+      <ul class="form-list">
+        <li class="form-list-item">
+          <label for="toCountry" class="required-field">Country</label>
+          <ng-select
+            id="toCountry"
+            formControlName="toCountry"
+            [items]="countriesList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Country"
+          ></ng-select>
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['toCountry'].touched &&
+                cdf['toCountry'].hasError('required')
+              "
+            >
+              Country is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="toCity" class="required-field">City</label>
+          <input id="toCity" type="text" formControlName="toCity" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['toCity'].touched && cdf['toCity'].hasError('required')
+              "
+            >
+              City is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </app-form-subsection>
+
+    <!-- Insurance Details -->
+    <app-form-subsection title="Insurance Details">
+      <ul class="form-list">
+        <li class="form-list-item">
+          <label for="surveyor">Surveyor</label>
+          <ng-select
+            id="surveyor"
+            formControlName="surveyor"
+            [items]="surveyorList"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Select Surveyor"
+          ></ng-select>
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                cdf['surveyor'].touched && cdf['surveyor'].hasError('required')
+              "
+            >
+              Surveyor is required.
+            </p>
+          </div> -->
+        </li>
+        <li class="form-list-item">
+          <label for="insuredClaimRefNo">Insured Claim Ref No</label>
+          <input
+            id="insuredClaimRefNo"
+            type="text"
+            formControlName="insuredClaimRefNo"
+          />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                cdf['insuredClaimRefNo'].touched &&
+                cdf['insuredClaimRefNo'].hasError('required')
+              "
+            >
+              Insured Claim Ref No is required.
+            </p>
+          </div> -->
+        </li>
+        <li class="form-list-item">
+          <label for="p400CertificateNo">P400 Certificate No</label>
+          <input
+            id="p400CertificateNo"
+            type="text"
+            formControlName="p400CertificateNo"
+          />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                cdf['p400CertificateNo'].touched &&
+                cdf['p400CertificateNo'].hasError('required')
+              "
+            >
+              P400 Certificate No is required.
+            </p>
+          </div> -->
+        </li>
+        <li class="form-list-item">
+          <label for="insuredRepName" class="required-field"
+            >Insured Rep Name</label
+          >
+          <input
+            id="insuredRepName"
+            type="text"
+            formControlName="insuredRepName"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['insuredRepName'].touched &&
+                cdf['insuredRepName'].hasError('required')
+              "
+            >
+              Insured Rep Name is required.
+            </p>
+          </div>
+        </li>
+        <li class="form-list-item">
+          <label for="repPhone" class="required-field">Phone No (Rep)</label>
+          <input id="repPhone" type="text" formControlName="repPhone" />
+          <div class="errors">
+            <p
+              *ngIf="
+                cdf['repPhone'].touched && cdf['repPhone'].hasError('required')
+              "
+            >
+              Phone No is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </app-form-subsection>
+
+    <div class="flex-center mt-4">
+      <button type="submit" class="green-button">Submit</button>
+    </div>
+  </app-form-section>
+</form>
+<form
+  [formGroup]="billDetailsForm"
+  (ngSubmit)="submitBillDetailsForm()"
+  *ngIf="claimSectionSubmitted"
+>
+  <app-form-section
+    [title]="'Bill Details'"
+    [(isSectionOpen)]="billSectionOpen"
+  >
+    <p class="highlight-blue-heading">Claim Details ID: {{ claimDetailsId }}</p>
+    <!-- Insured Details -->
+    <app-form-subsection title="Insured Details">
+      <ul class="form-list">
+        <li class="form-list-item">
+          <label for="ckycNo" class="required-field">CKYC No</label>
+          <input id="ckycNo" type="text" formControlName="ckycNo" />
+          <div class="errors">
+            <p
+              *ngIf="
+                bdf['ckycNo'].touched && bdf['ckycNo'].hasError('required')
+              "
+            >
+              CKYC No is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item">
+          <label for="supplierInvoiceNo" class="required-field"
+            >Supplier Invoice No</label
+          >
+          <input
+            id="supplierInvoiceNo"
+            type="text"
+            formControlName="supplierInvoiceNo"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                bdf['supplierInvoiceNo'].touched &&
+                bdf['supplierInvoiceNo'].hasError('required')
+              "
+            >
+              Supplier Invoice No is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item">
+          <label for="insuredAccNo" class="required-field"
+            >Insured Account No</label
+          >
+          <input id="insuredAccNo" type="text" formControlName="insuredAccNo" />
+          <div class="errors">
+            <p
+              *ngIf="
+                bdf['insuredAccNo'].touched &&
+                bdf['insuredAccNo'].hasError('required')
+              "
+            >
+              Insured Account No is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item">
+          <label for="insuredIfscCode" class="required-field"
+            >Insured IFSC Code</label
+          >
+          <input
+            id="insuredIfscCode"
+            type="text"
+            formControlName="insuredIfscCode"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                bdf['insuredIfscCode'].touched &&
+                bdf['insuredIfscCode'].hasError('required')
+              "
+            >
+              Insured IFSC Code is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item">
+          <label for="billSource" class="required-field">Bill Source</label>
+          <input id="billSource" type="text" formControlName="billSource" />
+          <div class="errors">
+            <p
+              *ngIf="
+                bdf['billSource'].touched &&
+                bdf['billSource'].hasError('required')
+              "
+            >
+              Bill Source is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item">
+          <label for="crmClaimNo" class="required-field">CRM Claim No</label>
+          <input id="crmClaimNo" type="text" formControlName="crmClaimNo" />
+          <div class="errors">
+            <p
+              *ngIf="
+                bdf['crmClaimNo'].touched &&
+                bdf['crmClaimNo'].hasError('required')
+              "
+            >
+              CRM Claim No is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item">
+          <label for="peripheralBillId" class="required-field"
+            >Peripheral Bill Id</label
+          >
+          <input
+            id="peripheralBillId"
+            type="text"
+            formControlName="peripheralBillId"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                bdf['peripheralBillId'].touched &&
+                bdf['peripheralBillId'].hasError('required')
+              "
+            >
+              Peripheral Bill Id is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </app-form-subsection>
+
+    <!-- Claim Calculation -->
+    <app-form-subsection title="Claim Calculation">
+      <ul class="form-list">
+        <li class="form-list-item">
+          <label for="costOfDamagedCargo" class="required-field"
+            >Cost of Damaged Cargo</label
+          >
+          <input
+            id="costOfDamagedCargo"
+            type="number"
+            formControlName="costOfDamagedCargo"
+          />
+          <div class="errors">
+            <p
+              *ngIf="
+                bdf['costOfDamagedCargo'].touched &&
+                bdf['costOfDamagedCargo'].hasError('required')
+              "
+            >
+              Cost of damaged cargo is required.
+            </p>
+          </div>
+        </li>
+
+        <li class="form-list-item">
+          <label for="insurance">Insurance</label>
+          <input id="insurance" type="number" formControlName="insurance" />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['insurance'].touched &&
+                bdf['insurance'].hasError('required')
+              "
+            >
+              Insurance is required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="freight">Freight</label>
+          <input id="freight" type="number" formControlName="freight" />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['freight'].touched && bdf['freight'].hasError('required')
+              "
+            >
+              Freight is required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="incidentals">Incidentals</label>
+          <input id="incidentals" type="number" formControlName="incidentals" />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['incidentals'].touched &&
+                bdf['incidentals'].hasError('required')
+              "
+            >
+              Incidentals are required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="otherDeduction">Other Deduction (If Any)</label>
+          <input
+            id="otherDeduction"
+            type="number"
+            formControlName="otherDeduction"
+          />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['otherDeduction'].touched &&
+                bdf['otherDeduction'].hasError('required')
+              "
+            >
+              Other deduction is required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="salvage">Salvage</label>
+          <input id="salvage" type="number" formControlName="salvage" />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['salvage'].touched && bdf['salvage'].hasError('required')
+              "
+            >
+              Salvage value is required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="proportionateShare">Proportionate Share</label>
+          <input
+            id="proportionateShare"
+            type="number"
+            formControlName="proportionateShare"
+          />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['proportionateShare'].touched &&
+                bdf['proportionateShare'].hasError('required')
+              "
+            >
+              Proportionate share is required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="customDuty">Custom Duty (At Actuals)</label>
+          <input id="customDuty" type="number" formControlName="customDuty" />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['customDuty'].touched &&
+                bdf['customDuty'].hasError('required')
+              "
+            >
+              Custom Duty is required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="otherOverheads">Other Overheads (If Any)</label>
+          <input
+            id="otherOverheads"
+            type="number"
+            formControlName="otherOverheads"
+          />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['otherOverheads'].touched &&
+                bdf['otherOverheads'].hasError('required')
+              "
+            >
+              Other Overheads are required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="franchise">Franchise</label>
+          <input id="franchise" type="number" formControlName="franchise" />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['franchise'].touched &&
+                bdf['franchise'].hasError('required')
+              "
+            >
+              Franchise is required.
+            </p>
+          </div> -->
+        </li>
+
+        <li class="form-list-item">
+          <label for="excess">Excess</label>
+          <input id="excess" type="number" formControlName="excess" />
+          <!-- <div class="errors">
+            <p
+              *ngIf="
+                bdf['excess'].touched && bdf['excess'].hasError('required')
+              "
+            >
+              Excess amount is required.
+            </p>
+          </div> -->
+        </li>
+      </ul>
+    </app-form-subsection>
+
+    <div class="flex-center mt-4">
+      <button type="submit" class="green-button">Submit</button>
+    </div>
+  </app-form-section>
+</form>
+<form
+  [formGroup]="uploadDocumentsForm"
+  (ngSubmit)="submitUploadDocumentsForm()"
+  *ngIf="claimSectionSubmitted && billSectionSubmitted"
+>
+  <app-form-section
+    [title]="'Upload Documents'"
+    [(isSectionOpen)]="uploadSectionOpen"
+  >
+    <app-form-subsection title="Documents">
+      <ul class="form-list">
+        <li class="form-list-item width-2" *ngFor="let doc of documentList">
+          <label [for]="doc.formControlField" class="required-field">{{
+            doc.documentName
+          }}</label>
+          <input
+            [id]="doc.formControlField"
+            type="file"
+            [formControlName]="doc.formControlField"
+          />
+          <!-- [attr.multiple]="
+              doc.formControlField === 'damagePhotos' ? '' : null
+            " -->
+          <div class="errors">
+            <p
+              *ngIf="
+                udf[doc.formControlField].touched &&
+                udf[doc.formControlField].hasError('required')
+              "
+            >
+              {{ doc.documentName }} is required.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </app-form-subsection>
+
+    <div class="flex-center mt-4">
+      <button type="submit" class="green-button">Submit</button>
+    </div>
+  </app-form-section>
+</form>
+
+<!-- L2 Remarks -->
+<app-form-section title="Policy Review">
+  <app-form-subsection title="L2 Remarks">
+    <!-- View Only L2 Remarks -->
+    <ul class="view-list">
+      <li class="view-list-item">
+        <strong>Policy Status:</strong>
+        <span>{{ viewData.policyStatus || "N/A" }}</span>
+      </li>
+      <li class="view-list-item width-3">
+        <strong>Remarks:</strong>
+        <span>{{ viewData.remarks || "N/A" }}</span>
+      </li>
+    </ul>
+  </app-form-subsection>
+</app-form-section>

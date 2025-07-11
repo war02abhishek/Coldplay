@@ -1,0 +1,25 @@
+package com.itgi.claim.marine.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.itgi.claim.wrapper.BillDetails;
+import com.itgi.claim.wrapper.ClaimDetails;
+import com.itgi.claim.wrapper.ClaimDocuments;
+import com.itgi.claim.wrapper.ClaimWrapper;
+
+@Service
+public interface MarineService {
+
+	public String submitClaimDetails(ClaimDetails claimDetails) throws Exception;
+
+	public String submitBillDetails(BillDetails billDetails) throws Exception;
+
+	public ClaimWrapper viewClaimByClaimId(String claimId) throws Exception;
+
+	public String submitClaimDocuments(List<ClaimDocuments> documentList) throws Exception;
+	
+	public boolean updateClaimStatus(String l2Status, String l2Remarks, String claimDetailsId) throws Exception;
+
+}

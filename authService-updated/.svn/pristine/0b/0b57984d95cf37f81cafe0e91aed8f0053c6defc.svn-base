@@ -1,0 +1,197 @@
+package com.itgi.claim.wrapper;
+
+public class BillDetails {
+
+	private String ckycNo;
+	private String supplierInvoiceNo;
+	private String insuredAccNo;
+	private String insuredIfscCode;
+	private String billSource;
+	private String crmClaimNo;
+	private String peripheralBillId;
+
+	private String costOfDamagedCargo;
+	private String insurance;
+	private String freight;
+	private String incidentals;
+	private String otherDeduction;
+	private String salvage;
+	private String proportionateShare;
+	private String customDuty;
+	private String otherOverheads;
+	private String franchise;
+	private String excess;
+
+	private String claimDetailsId;
+	private String itgiClaimNo;
+	private String crmBillId;
+
+	public String getCkycNo() {
+		return ckycNo;
+	}
+
+	public void setCkycNo(String ckycNo) {
+		this.ckycNo = ckycNo;
+	}
+
+	public String getSupplierInvoiceNo() {
+		return supplierInvoiceNo;
+	}
+
+	public void setSupplierInvoiceNo(String supplierInvoiceNo) {
+		this.supplierInvoiceNo = supplierInvoiceNo;
+	}
+
+	public String getInsuredAccNo() {
+		return insuredAccNo;
+	}
+
+	public void setInsuredAccNo(String insuredAccNo) {
+		this.insuredAccNo = insuredAccNo;
+	}
+
+	public String getInsuredIfscCode() {
+		return insuredIfscCode;
+	}
+
+	public void setInsuredIfscCode(String insuredIfscCode) {
+		this.insuredIfscCode = insuredIfscCode;
+	}
+
+	public String getBillSource() {
+		return billSource;
+	}
+
+	public void setBillSource(String billSource) {
+		this.billSource = billSource;
+	}
+
+	public String getCrmClaimNo() {
+		return crmClaimNo;
+	}
+
+	public void setCrmClaimNo(String crmClaimNo) {
+		this.crmClaimNo = crmClaimNo;
+	}
+
+	public String getPeripheralBillId() {
+		return peripheralBillId;
+	}
+
+	public void setPeripheralBillId(String peripheralBillId) {
+		this.peripheralBillId = peripheralBillId;
+	}
+
+	public String getCostOfDamagedCargo() {
+		return costOfDamagedCargo;
+	}
+
+	public void setCostOfDamagedCargo(String costOfDamagedCargo) {
+		this.costOfDamagedCargo = costOfDamagedCargo;
+	}
+
+	public String getInsurance() {
+		return insurance;
+	}
+
+	public void setInsurance(String insurance) {
+		this.insurance = insurance;
+	}
+
+	public String getFreight() {
+		return freight;
+	}
+
+	public void setFreight(String freight) {
+		this.freight = freight;
+	}
+
+	public String getIncidentals() {
+		return incidentals;
+	}
+
+	public void setIncidentals(String incidentals) {
+		this.incidentals = incidentals;
+	}
+
+	public String getOtherDeduction() {
+		return otherDeduction;
+	}
+
+	public void setOtherDeduction(String otherDeduction) {
+		this.otherDeduction = otherDeduction;
+	}
+
+	public String getSalvage() {
+		return salvage;
+	}
+
+	public void setSalvage(String salvage) {
+		this.salvage = salvage;
+	}
+
+	public String getProportionateShare() {
+		return proportionateShare;
+	}
+
+	public void setProportionateShare(String proportionateShare) {
+		this.proportionateShare = proportionateShare;
+	}
+
+	public String getCustomDuty() {
+		return customDuty;
+	}
+
+	public void setCustomDuty(String customDuty) {
+		this.customDuty = customDuty;
+	}
+
+	public String getOtherOverheads() {
+		return otherOverheads;
+	}
+
+	public void setOtherOverheads(String otherOverheads) {
+		this.otherOverheads = otherOverheads;
+	}
+
+	public String getFranchise() {
+		return franchise;
+	}
+
+	public void setFranchise(String franchise) {
+		this.franchise = franchise;
+	}
+
+	public String getExcess() {
+		return excess;
+	}
+
+	public void setExcess(String excess) {
+		this.excess = excess;
+	}
+
+	public String getClaimDetailsId() {
+		return claimDetailsId;
+	}
+
+	public void setClaimDetailsId(String claimDetailsId) {
+		this.claimDetailsId = claimDetailsId;
+	}
+
+	public String getItgiClaimNo() {
+		return itgiClaimNo;
+	}
+
+	public void setItgiClaimNo(String itgiClaimNo) {
+		this.itgiClaimNo = itgiClaimNo;
+	}
+
+	public String getCrmBillId() {
+		return crmBillId;
+	}
+
+	public void setCrmBillId(String crmBillId) {
+		this.crmBillId = crmBillId;
+	}
+
+}

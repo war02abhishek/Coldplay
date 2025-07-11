@@ -1,0 +1,86 @@
+<app-form-section
+  [title]="'Vehicle Information'"
+  [(isSectionOpen)]="sectionExpanded"
+>
+  <app-form-subsection title="Personal Details">
+    <ul class="form-list">
+      <li class="form-list-item">
+        <label for="firstName">First Name</label>
+        <input disabled id="firstName" type="text" />
+        <div class="errors">
+          <p>First Name is required.</p>
+          <p>First Name is invalid.</p>
+        </div>
+      </li>
+
+      <li class="form-list-item">
+        <label for="lastName">Last Name</label>
+        <input id="lastName" type="text" />
+      </li>
+      <li class="form-list-item">
+        <label for="lastName">Date</label>
+        <input id="lastName" type="date" />
+      </li>
+      <li class="form-list-item">
+        <label for="lastName">Last Name</label>
+        <input id="lastName" type="text" />
+      </li>
+      <li class="form-list-item">
+        <label for="lastName">Last Name</label>
+        <input id="lastName" type="text" />
+      </li>
+      <li class="form-list-item">
+        <label for="lastName" class="required-field">Text Area</label>
+        <textarea placeholder="Textarea"></textarea>
+      </li>
+      <!-- more fields... -->
+      <li class="form-list-item col-span-1">
+        <label for="vehicleType">Vehicle Type</label>
+        <ng-select
+          id="vehicleType"
+          [items]="vehicleTypes"
+          bindLabel="label"
+          bindValue="value"
+          placeholder="Select type"
+        ></ng-select>
+      </li>
+    </ul>
+    <button class="green-button">Submit</button>
+    <button class="blue-button">Submit</button>
+    <button class="red-button">Submit</button>
+  </app-form-subsection>
+</app-form-section>
+
+<app-generic-table
+  [columns]="tableColumns"
+  [data]="tableData"
+  [itemsPerPage]="5"
+></app-generic-table>
+<button class="blue-button" (click)="openModal()">Show Modal</button>
+<app-generic-modal
+  [isOpen]="showModal"
+  (isOpenChange)="showModal = $event"
+  title="Details Preview"
+>
+  <p>This modal is scrollable if the content height exceeds 90% of viewport.</p>
+
+  <div class="space-y-2">
+    <p *ngFor="let line of [].constructor(50)">
+      More content to test scrolling...
+    </p>
+  </div>
+</app-generic-modal>
+
+<app-tabs-container>
+  <app-tab-element title="Overview">
+    <p>This is the Overview tab content.</p>
+  </app-tab-element>
+
+  <app-tab-element title="Details">
+    <p>This is the Details tab content.</p>
+  </app-tab-element>
+
+  <app-tab-element title="Settings">
+    <p>This is the Settings tab content.</p>
+  </app-tab-element>
+</app-tabs-container>

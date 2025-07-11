@@ -1,0 +1,115 @@
+package com.itgi.claim.validator;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
+
+import com.itgi.claim.ValidationProperties;
+import com.itgi.claim.service.UserService;
+import com.itgi.claim.util.APPConstants;
+import com.itgi.claim.wrapper.User;
+
+@Component
+public class UserValidator implements Validator {
+	@Autowired
+	private ValidationProperties validationProperties;
+
+	@Autowired
+	private UserService userService;
+
+	@Override
+	public boolean supports(Class<?> paramClass) {
+		return User.class.equals(paramClass);
+	}
+
+	@Override
+	public void validate(Object obj, Errors errors) {
+		User wrapper = (User) obj;
+		String pageName = wrapper.getPageName();
+		if (StringUtils.equalsIgnoreCase(pageName, "login")) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, APPConstants.VALIDATION_FIELD_NAME_USERNAME,
+					APPConstants.VALIDATION_FIELD_ERROR_REQUIRED, validationProperties.usernameRequired());
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, APPConstants.VALIDATION_FIELD_NAME_PASSWORD,
+					APPConstants.VALIDATION_FIELD_ERROR_REQUIRED, validationProperties.passwordRequired());
+			if (!errors.hasErrors()) {
+				try {
+					User userWrapper = userService.getUserByUsername(wrapper.getUsername());
+					if (userWrapper == null) {
+						errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_ERROR,
+								APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+								validationProperties.invalidLoginCredentials());
+					}
+				} catch (Exception e) {
+					errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_ERROR,
+							APPConstants.VALIDATION_FIELD_ERROR_RUNTIME, validationProperties.exceptionError());
+				}
+			}
+		} else if (StringUtils.equalsIgnoreCase(pageName, "change-password")) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, APPConstants.VALIDATION_FIELD_NAME_USERNAME,
+					APPConstants.VALIDATION_FIELD_ERROR_REQUIRED, validationProperties.usernameRequired());
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, APPConstants.VALIDATION_FIELD_NAME_PASSWORD,
+					APPConstants.VALIDATION_FIELD_ERROR_REQUIRED, validationProperties.passwordRequired());
+			if (!errors.hasErrors()) {
+				try {
+					User userWrapper = userService.getUserByUsername(wrapper.getUsername());
+					if (userWrapper == null) {
+						errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_ERROR,
+								APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+								validationProperties.invalidLoginCredentials());
+					}
+					BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+					if (!bcrypt.matches(wrapper.getPassword(), userWrapper.getPassword())) {
+						errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_ERROR,
+								APPConstants.VALIDATION_FIELD_ERROR_RUNTIME,
+								validationProperties.oldPasswordMismatch());
+					}
+
+				} catch (Exception e) {
+					errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_ERROR,
+							APPConstants.VALIDATION_FIELD_ERROR_RUNTIME, validationProperties.exceptionError());
+				}
+			}
+
+		} else if (StringUtils.equalsIgnoreCase(pageName, "forgot-password")) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, APPConstants.VALIDATION_FIELD_NAME_USERNAME,
+					APPConstants.VALIDATION_FIELD_ERROR_REQUIRED, validationProperties.usernameRequired());
+			if (!errors.hasErrors()) {
+				try {
+					User userWrapper = userService.getUserByUsername(wrapper.getUsername());
+					if (userWrapper == null) {
+						errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_USERNAME,
+								APPConstants.VALIDATION_FIELD_ERROR_INVALID, validationProperties.userNotRegistered());
+					}
+				} catch (Exception e) {
+					errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_USERNAME,
+							APPConstants.VALIDATION_FIELD_ERROR_INVALID, validationProperties.exceptionError());
+				}
+			}
+		} else if (StringUtils.equalsIgnoreCase(pageName, "create-user")) {
+			ValidationUtils.rejectIfEmptyOrWhitespace(errors, APPConstants.VALIDATION_FIELD_NAME_USERNAME,
+					APPConstants.VALIDATION_FIELD_ERROR_REQUIRED, validationProperties.usernameRequired());
+			if (!errors.hasErrors()) {
+				try {
+					if (StringUtils.equalsIgnoreCase(wrapper.getRoleId(), APPConstants.LEVEL1)
+							&& wrapper.getParentUserId() == null) {
+						errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_ERROR,
+								APPConstants.VALIDATION_FIELD_ERROR_INVALID, "ParentUserId required when user is L1.");
+						return;
+					}
+					User userWrapper = userService.getUserByUsername(wrapper.getUsername());
+					if (userWrapper != null) {
+						errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_USERNAME,
+								APPConstants.VALIDATION_FIELD_ERROR_INVALID, validationProperties.duplicateUsername());
+					}
+				} catch (Exception e) {
+					errors.rejectValue(APPConstants.VALIDATION_FIELD_NAME_USERNAME,
+							APPConstants.VALIDATION_FIELD_ERROR_INVALID, validationProperties.exceptionError());
+				}
+			}
+		}
+	}
+}
