@@ -74,7 +74,7 @@ export class UserLoginComponent {
       // Check if the backend returned a successful status
       if (response?.status === 200 && response.object) {
         const userData = response.object;
-
+        console.log("login sucess ",userData);
         // Store JWT token and user info securely
         await this.storageService.setItem('jwt_token', userData.jwtToken);
         const privileges = userData.privileges.map((item: any) => ({

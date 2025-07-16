@@ -120,7 +120,8 @@
     /* Generic Auth Layout */
     .auth-bg {
         @apply flex items-center justify-center h-screen bg-off-white3/50;
-        background: url(/images/itgi-office.jpg) no-repeat 50vw 100vh;
+        /* background: url(/images/coldgroup.png) no-repeat 50vw 100vh; */
+         background: url(/images/coldg.png) no-repeat 50vw 100vh;
         background-size: 50vw auto;
         background-position: 0% 6%;
     }

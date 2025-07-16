@@ -8,9 +8,11 @@ eureka:
   instance:
     prefer-ip-address: true
     ip-address: localhost
+
 spring:
   application:
     name: api-gateway
+
   cloud:
     gateway:
       routes:
@@ -18,5 +20,18 @@ spring:
           uri: http://localhost:7777
           predicates:
             - Path=/authgateway/**
+          filters:
+            - StripPrefix=1
+
+        - id: ticket-service
+          uri: http://localhost:8089
+          predicates:
+            - Path=/ticketgateway/**
+          filters:
+            - StripPrefix=1
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+
   main:
     web-application-type: reactive

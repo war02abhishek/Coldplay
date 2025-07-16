@@ -35,7 +35,7 @@ import com.itgi.claim.wrapper.User;
 import com.itgi.claim.wrapper.UserPrincipal;
 
 @RestController
-@RequestMapping("/authgateway/auth")
+@RequestMapping("/auth")
 public class AuthController {
 	private static Logger log = LoggerFactory.getLogger(AuthController.class);
 

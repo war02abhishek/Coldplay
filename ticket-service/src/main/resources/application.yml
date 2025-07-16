@@ -2,18 +2,16 @@ spring:
   application:
     name: ticket-service
 
-  kafka:
-    bootstrap-servers: kafka:9092
-
-  redis:
-    host: redis
-    port: 6379
+#  kafka:
+#    bootstrap-servers: kafka:9092
+#
+#  redis:
+#    host: redis
+#    port: 6379
 
   data:
     mongodb:
-      host: mongo
-      port: 27017
-      database: test
+      uri: mongodb+srv://adminColdplay:A0Qmud4BgwVmOsaF@cluster0.w5qkm.mongodb.net/authDB?retryWrites=true&w=majority&appName=Cluster0
 
 server:
   port: 8089
@@ -25,7 +23,4 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://service-registry:8761/eureka
-
-
-
+      defaultZone: http://localhost:8761/eureka

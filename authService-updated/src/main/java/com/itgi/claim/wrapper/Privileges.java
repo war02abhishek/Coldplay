@@ -1,9 +1,17 @@
 package com.itgi.claim.wrapper;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Privileges {
+import org.springframework.stereotype.Component;
 
+@Component
+public class Privileges implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4822425458046375783L;
 	private Integer privilegeId;
 	private String name;
 	private String url;

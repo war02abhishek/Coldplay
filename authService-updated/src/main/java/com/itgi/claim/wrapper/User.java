@@ -1,5 +1,6 @@
 package com.itgi.claim.wrapper;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -8,8 +9,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.itgi.claim.util.APPConstants;
 
 @JsonInclude(Include.NON_EMPTY)
-public class User {
+public class User implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7380542102001031952L;
 	private String pageName;
 	private String mobile;
 	private String email;
@@ -24,7 +29,7 @@ public class User {
 	private String active;
 	private String error;
 	private Timestamp createdDate;
-	private List<Privileges> privileges;
+	private List<Privileges>privileges;
 	private String[] allowedPrivileges;
 
 
@@ -140,11 +145,11 @@ public class User {
 		this.createdDate = createdDate;
 	}
 
-	public List<Privileges> getPrivilages() {
+	public List<Privileges>getPrivilages() {
 		return privileges;
 	}
 
-	public void setPrivilages(List<Privileges> privilages) {
+	public void setPrivilages(List<Privileges>privilages) {
 		this.privileges = privilages;
 	}
 
