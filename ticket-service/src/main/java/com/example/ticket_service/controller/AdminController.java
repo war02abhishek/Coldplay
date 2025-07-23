@@ -1,5 +1,7 @@
 package com.example.ticket_service.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +51,17 @@ public class AdminController {
 		} catch (Exception e) {
 			return new RestResponse(404, "Concert not found");
 		}
+	}
+	
+	@GetMapping("/getallConcerts")
+	public RestResponse getAllConcerts() {
+		List<Concert>list=null;
+		try {
+			list=concertService.getAllConcerts();
+		}catch(Exception e) {
+			return new RestResponse(400, "Concerts fetch failed");
+		}
+		return new RestResponse(200, "Success",list);
 	}
 
 }

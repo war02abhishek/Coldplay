@@ -2,8 +2,8 @@ spring:
   application:
     name: ticket-service
 
-#  kafka:
-#    bootstrap-servers: kafka:9092
+  kafka:
+    bootstrap-servers: http://localhost:9092
 #
 #  redis:
 #    host: redis

@@ -1,6 +1,7 @@
 package com.example.ticket_service.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,8 @@ public class ConcertService {
 
     public Concert getConcertDetails(String concertId) {
         return concertRepository.findByConcertId(concertId);
+    }
+    public List<Concert>getAllConcerts(){
+    	return concertRepository.findAll();
     }
 }

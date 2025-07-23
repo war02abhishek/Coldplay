@@ -30,6 +30,13 @@ spring:
           filters:
             - StripPrefix=1
 
+        - id: ticket-processing-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/ticketprocessing/**
+          filters:
+            - StripPrefix=1
+
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
 

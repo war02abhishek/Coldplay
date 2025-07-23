@@ -1,0 +1,36 @@
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Live Concerts</h2>
+
+  <div *ngIf="loading" class="text-center text-gray-500 text-lg">Loading...</div>
+  <div *ngIf="error" class="text-center text-red-600 text-lg">{{ error }}</div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      *ngFor="let concert of concerts"
+      class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition duration-200"
+    >
+      <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ concert.title }}</h3>
+      <p class="text-gray-600 mb-2">{{ concert.description }}</p>
+      <p class="text-sm text-gray-500">
+        <span class="font-medium">Location:</span> {{ concert.location }}
+      </p>
+      <p class="text-sm text-gray-500">
+        <span class="font-medium">Date:</span> {{ concert.date | date:'medium' }}
+      </p>
+      <p class="text-sm text-gray-500">
+        <span class="font-medium">Price:</span> Rs. {{ concert.price }}
+      </p>
+      <p class="text-sm text-gray-500 mb-4">
+        <span class="font-medium">Available Seats:</span> {{ concert.availableSeats }}
+      </p>
+
+      <button
+        class="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+        [disabled]="concert.availableSeats === 0"
+        (click)="bookTicket(concert.concertId)"
+      >
+        {{ concert.availableSeats > 0 ? 'Book Ticket' : 'Sold Out' }}
+      </button>
+    </div>
+  </div>
+</div>

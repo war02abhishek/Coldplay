@@ -3,17 +3,27 @@ spring:
     name: notification-service
 
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: http://localhost:9092
 
-  redis:
-    host: redis
-    port: 6379
+  # redis:
+  #   host: redis
+  #   port: 6379
 
   data:
     mongodb:
-      host: mongo
-      port: 27017
-      database: test
+      uri: mongodb+srv://adminColdplay:A0Qmud4BgwVmOsaF@cluster0.w5qkm.mongodb.net/authDB?retryWrites=true&w=majority&appName=Cluster0
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: abhishekwanve369@gmail.com
+    password: hbsbmnvmkswjztbq  # Use App Password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
   port: 8083
@@ -25,10 +35,4 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://service-registry:8761/eureka
-
-
-
-
-      
-
+      defaultZone: http://localhost:8761/eureka

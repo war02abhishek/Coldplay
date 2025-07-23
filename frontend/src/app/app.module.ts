@@ -22,28 +22,18 @@ import { GenericTableComponent } from './modules/shared/generic-table/generic-ta
 import { GenericModalComponent } from './modules/shared/generic-modal/generic-modal.component';
 import { TabsContainerComponent } from './modules/shared/tabs-container/tabs-container.component';
 import { TabElementComponent } from './modules/shared/tab-element/tab-element.component';
-import { ChangePasswordComponent } from './components/portal/change-password/change-password.component';
-import { CreateUserComponent } from './components/portal/create-user/create-user.component';
-import { PolicyMappingComponent } from './components/portal/policy-mapping/policy-mapping.component';
-import { InitiateClaimComponent } from './components/portal/initiate-claim/initiate-claim.component';
-import { ViewClaimComponent } from './components/portal/view-claim/view-claim.component';
-import { ClaimsReportComponent } from './components/portal/claims-report/claims-report.component';
-import { TestUiComponent } from './components/portal/test-ui/test-ui.component';
-import { MarineClaimViewComponent } from './components/marine/marine-claim-view/marine-claim-view.component';
-import { MarineClaimIntimateComponent } from './components/marine/marine-claim-initiate/marine-claim-initiate.component';
-import { MarineClaimReportComponent } from './components/marine/marine-claim-report/marine-claim-report.component';
-import { ViewAuditTrailComponent } from './components/portal/view-audit-trail/view-audit-trail.component';
-import { PrivilegeMappingComponent } from './components/portal/privilege-mapping/privilege-mapping.component';
-import { ListOfClaimsComponent } from './components/portal/list-of-claims/list-of-claims.component';
+
 import { PasswordToggleButtonComponent } from './modules/shared/password-toggle-button/password-toggle-button.component';
 import { ApiInterceptor } from './interceptors/api.interceptor';
-import { ResetPasswordComponent } from './components/portal/reset-password/reset-password.component';
 import { GenericAuthLayoutComponent } from './modules/shared/generic-auth-layout/generic-auth-layout.component';
 import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
+import { LiveEventsComponent } from './components/portal/live-events/live-events.component';
+import { BookTicketComponent } from './components/portal/book-ticket/book-ticket.component';
+
 
 @NgModule({
   declarations: [
@@ -52,8 +42,9 @@ import {
     DashboardComponent,
     HomeComponent,
     UserLoginComponent,
-    ResetPasswordComponent,
-    TestUiComponent,
+    LiveEventsComponent,
+    BookTicketComponent,
+
 
     // Reusable Components
     NavbarComponent,
@@ -70,23 +61,7 @@ import {
     PasswordToggleButtonComponent,
 
     // Pipes
-    CustomTitleCasePipe,
-
-    // Portal Components
-    ChangePasswordComponent,
-    CreateUserComponent,
-    PrivilegeMappingComponent,
-    PolicyMappingComponent,
-    InitiateClaimComponent,
-    ViewClaimComponent,
-    ClaimsReportComponent,
-    ListOfClaimsComponent,
-    ViewAuditTrailComponent,
-
-    // Marine Components
-    MarineClaimIntimateComponent,
-    MarineClaimViewComponent,
-    MarineClaimReportComponent,
+    CustomTitleCasePipe
   ],
   imports: [
     BrowserModule,
@@ -109,4 +84,4 @@ import {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
