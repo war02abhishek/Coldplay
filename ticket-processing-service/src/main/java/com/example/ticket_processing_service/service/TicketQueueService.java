@@ -68,7 +68,7 @@ public class TicketQueueService {
 				result.setRequestId(requestId);
 				result.setConcertId(concertId);
 				result.setQuantity(quantity);
-				result.setUserId(userId);
+//				result.setUserId(userId);
 				result.setStatus("CONFIRMED");
 				result.setMessage("Your queued request has been confirmed!");
 

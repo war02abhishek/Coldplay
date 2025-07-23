@@ -3,24 +3,16 @@ package com.example.ticket_processing_service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TicketResult {
-    private String requestId;
-    private String status; // "BOOKED" or "IN_QUEUE"
-    @JsonProperty("concertId")
-    public String concertId;
+	private String requestId;
+	private String username;
+	private String email;
+	private String quantity;
+	private String paymentMode;
+	private String concertId;
+	private String status;
+	private String message;
     
-    @JsonProperty("quantity")
-    public String quantity;
-    private String message;
-    
-    @JsonProperty("userId")
-    public String userId;
-    
-    public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+   
 	public String getConcertId() {
 		return concertId;
 	}
@@ -34,6 +26,24 @@ public class TicketResult {
 		this.quantity = quantity;
 	}
     
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
+	}
 	public String getRequestId() {
 		return requestId;
 	}

@@ -1,21 +1,45 @@
 package com.example.ticket_processing_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.Serializable;
 
-public class TicketRequest {
+public class TicketRequest implements Serializable {
 	
-	@JsonProperty("requestId")
-    public String requestId;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6347204564208850235L;
+	private String requestId;
+	private String username;
+	private String email;
+	private String quantity;
+	private String paymentMode;
+	private String concertId;
+    private String status;
     
-    @JsonProperty("concertId")
-    public String concertId;
-    
-    @JsonProperty("userId")
-    public String userId;
-
-    @JsonProperty("quantity")
-    public String quantity;
-    
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
+	}
 	public String getRequestId() {
 		return requestId;
 	}
@@ -28,12 +52,7 @@ public class TicketRequest {
 	public void setConcertId(String concertId) {
 		this.concertId = concertId;
 	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+
 	public String getQuantity() {
 		return quantity;
 	}

@@ -30,41 +30,84 @@ public class TicketProcessor {
 	@Autowired
 	private ObjectMapper objectMapper; // Autowire ObjectMapper
 
-	@KafkaListener(topics = "ticket-requests", groupId = "ticket-processor-group")
-	public void processTicketRequest(String requestJson) {
+	private void sendErrorResult(String requestJson, String errorMessage) {
 		try {
-			log.info("Received ticket request: {}", requestJson);
-
-			// Deserialize the JSON string to TicketRequest
 			TicketRequest request = objectMapper.readValue(requestJson, TicketRequest.class);
-
-			boolean isBooked = inventoryService.reserveTicket(request.getConcertId(), request.getQuantity());
-
 			TicketResult result = new TicketResult();
 			result.setRequestId(request.getRequestId());
 			result.setConcertId(request.getConcertId());
 			result.setQuantity(request.getQuantity());
-			result.setUserId(request.getUserId());
+			result.setUsername(request.getUsername());
+			result.setEmail(request.getEmail());
+			result.setPaymentMode(request.getPaymentMode());
+			result.setStatus("ERROR");
+			result.setMessage("Booking failed: " + errorMessage);
 
-			if (isBooked) {
-				result.setStatus("CONFIRMED");
-				result.setMessage("Your tickets have been confirmed!");
-			} else {
-				// Add to queue and get position
-				int queuePosition = ticketQueueService.addToQueue(request.getConcertId(), request.getUserId(),
-						request.getQuantity(), request.getRequestId());
-
-				result.setStatus("QUEUED");
-				result.setMessage("You are in queue. Position: " + queuePosition);
-			}
-
-			// Serialize the result to JSON before sending
 			String resultJson = objectMapper.writeValueAsString(result);
-			kafkaTemplate.send("ticket-results", resultJson);
+			kafkaTemplate.send("Booking-error-topic", resultJson); // 🔁 new topic for failures
 
-		} catch (JsonProcessingException e) {
-			log.error("Failed to process ticket request", e);
-			throw new RuntimeException("Failed to process ticket request", e);
+			log.info("Error result sent: {}", resultJson);
+
+		} catch (Exception ex) {
+			log.error("Failed to send error result", ex);
 		}
 	}
+
+	@KafkaListener(topics = "Booking-request-topic", groupId = "ticket-processor-group")
+	public void processTicketRequest(String requestJson) {
+		try {
+			log.info("Received ticket request: {}", requestJson);
+
+			// 1. Deserialize request
+			TicketRequest request = objectMapper.readValue(requestJson, TicketRequest.class);
+
+			// 2. Attempt to reserve ticket
+			boolean isBooked = inventoryService.reserveTicket(request.getConcertId(), request.getQuantity());
+            log.info("Is Booking done "+isBooked);
+			// 3. Build result
+			TicketResult result = buildTicketResult(request, isBooked);
+
+		} catch (JsonProcessingException e) {
+			log.error("Failed to deserialize ticket request: {}", requestJson, e);
+		} catch (Exception ex) {
+			sendErrorResult(requestJson, ex.getMessage());
+			log.error("Unexpected error while processing ticket request", ex);
+		}
+	}
+
+	private TicketResult buildTicketResult(TicketRequest request, boolean isBooked) throws JsonProcessingException {
+		TicketResult result = new TicketResult();
+		result.setRequestId(request.getRequestId());
+		result.setConcertId(request.getConcertId());
+		result.setQuantity(request.getQuantity());
+		result.setUsername(request.getUsername());
+		result.setEmail(request.getEmail());
+		result.setPaymentMode(request.getPaymentMode());
+
+		if (isBooked) {
+			result.setStatus("CONFIRMED");
+			result.setMessage("Your tickets have been confirmed!");
+
+			String resultJson = objectMapper.writeValueAsString(result);
+			kafkaTemplate.send("Booking-confirmed-topic", resultJson);
+
+			log.info("Ticket result sent: {}", resultJson);
+
+		} else {
+//        int queuePosition = ticketQueueService.addToQueue(
+//                request.getConcertId(),
+//                request.getUserId(),
+//                request.getQuantity(),
+//                request.getRequestId()
+//        );
+			result.setStatus("QUEUED");
+			result.setMessage("You are in queue. Position: ");
+			String resultJson = objectMapper.writeValueAsString(result);
+			kafkaTemplate.send("Booking-waitlisted-topic", resultJson);
+
+		}
+
+		return result;
+	}
+
 }

@@ -8,9 +8,8 @@ import org.springframework.data.mongodb.repository.Update;
 
 import com.example.ticket_processing_service.dto.Concert;
 
-public interface ConcertRepository extends MongoRepository<Concert,String> {
-    
-    // Custom query by concertId (uses the indexed field)
+public interface ConcertRepository extends MongoRepository<Concert, String> {
+  
     Concert findByConcertId(String concertId);
     
     
@@ -27,15 +26,5 @@ public interface ConcertRepository extends MongoRepository<Concert,String> {
     void deductSeats(String concertId, int quantity);
     
     
-    // Add seats (for inventory restocking)
-    @Query("{ 'concertId' : ?0 }")
-    @Update("{ $inc: { 'availableSeats' : ?1 } }")
-    int addSeats(String concertId, int quantity);
-    
-    
-    // Direct set available seats (use carefully)
-    @Query("{ 'concertId' : ?0 }")
-    @Update("{ $set: { 'availableSeats' : ?1 } }")
-    int setAvailableSeats(String concertId, String newAmount);
     
 }
