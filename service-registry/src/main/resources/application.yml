@@ -41,4 +41,11 @@ eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+management:
+  metrics:
+    binders:
+      processor:
+        enabled: false
+    enable:
+      processor: false
 
