@@ -1,5 +1,6 @@
 FROM eclipse-temurin:11-jre
 WORKDIR /app
-COPY build/libs/service-registry-0.0.1-SNAPSHOT.jar app.jar
-EXPOSE 8761
+COPY build/libs/authService-updated-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 7777
 ENTRYPOINT ["java", "-jar", "app.jar"]
+

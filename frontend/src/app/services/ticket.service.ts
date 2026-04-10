@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class TicketService {
-  private readonly baseUrl = `${environment.apiUrl}/ticketgateway/ticket`;
+  private readonly baseUrl = `${environment.apiUrl}/ticketgateway/tickets`;
 
   constructor(private api: ApiService) {}
 

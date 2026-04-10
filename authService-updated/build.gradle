@@ -1,8 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.7.18'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'io.spring.dependency-management' version '1.1.4'
 	id 'java'
-	id 'war'
 }
 
 group = 'com.itgi.claim'
@@ -21,7 +20,7 @@ repositories {
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.boot:spring-boot-dependencies:2.7.4"
+		mavenBom "org.springframework.boot:spring-boot-dependencies:2.7.18"
 	}
 }
 

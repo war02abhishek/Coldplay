@@ -20,11 +20,29 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @RequestMapping("/redis")
 public class ProcessingController {
 
-    
+    @Autowired
+    private ConcertRepository concertRepository;
+
     @GetMapping("/get")
     public String getMessage() {
     	return "Ticket Processing Service working";
     }
+
+    @GetMapping("/inventory/{concertId}")
+    public ResponseEntity<Map<String, Object>> getInventory(@PathVariable String concertId) {
+        Concert concert = concertRepository.findByConcertId(concertId);
+        Map<String, Object> response = new HashMap<>();
+        if (concert == null) {
+            response.put("error", "Concert not found");
+            return ResponseEntity.status(404).body(response);
+        }
+        response.put("concertId", concertId);
+        response.put("availableSeats", concert.getAvailableSeats());
+        response.put("totalSeats", concert.getTotalSeats());
+        response.put("status", concert.getStatus());
+        return ResponseEntity.ok(response);
+    }
+}
     
     
 //

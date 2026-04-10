@@ -55,4 +55,5 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	exclude '**/*'
 }

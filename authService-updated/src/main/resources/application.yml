@@ -6,16 +6,21 @@ spring:
     name: auth-service-updated
   data:
     mongodb:
-      uri: mongodb+srv://adminColdplay:A0Qmud4BgwVmOsaF@cluster0.w5qkm.mongodb.net/authDB?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://adminColdplay:A0Qmud4BgwVmOsaF@cluster0.w5qkm.mongodb.net/authDB?appName=Cluster0
   profiles:
     active:
     - dev
 eureka:
   instance:
-    prefer-ip-address: true
-    ip-address: localhost
+    hostname: auth-service-updated
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://service-registry:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+    
+#    service-registry
+    
+#    mongodb+srv://adminColdplay:A0Qmud4BgwVmOsaF@cluster0.w5qkm.mongodb.net/?appName=Cluster0
+    
+#    mongodb+srv://adminColdplay:A0Qmud4BgwVmOsaF@cluster0.w5qkm.mongodb.net/authDB?retryWrites=true&w=majority&appName=Cluster0

@@ -1,0 +1,93 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    restart: unless-stopped
+
+  service-registry:
+    image: 18219526/coldplay-service-registry:2.0
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+    restart: unless-stopped
+
+  auth-service-updated:
+    image: 18219526/coldplay-auth-service:2.0
+    container_name: auth-service-updated
+    ports:
+      - "7777:7777"
+    depends_on:
+      - service-registry
+    restart: unless-stopped
+
+  ticket-service:
+    image: 18219526/coldplay-ticket-service:2.0
+    container_name: ticket-service
+    ports:
+      - "8089:8089"
+    depends_on:
+      - kafka
+      - service-registry
+    restart: unless-stopped
+
+  ticket-processing-service:
+    image: 18219526/coldplay-ticket-processing:2.0
+    container_name: ticket-processing-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
+      - service-registry
+    restart: unless-stopped
+
+  notification-service:
+    image: 18219526/coldplay-notification-service:2.0
+    container_name: notification-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+      - service-registry
+    restart: unless-stopped
+
+  api-gateway:
+    image: 18219526/coldplay-api-gateway:2.0
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-registry
+      - auth-service-updated
+      - ticket-service
+      - ticket-processing-service
+      - notification-service
+    restart: unless-stopped
+
+  frontend:
+    image: 18219526/coldplay-frontend:1.0
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
+    restart: unless-stopped

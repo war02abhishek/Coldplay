@@ -4,10 +4,9 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://service-registry:8761/eureka
   instance:
-    prefer-ip-address: true
-    ip-address: localhost
+    hostname: api-gateway
 
 spring:
   application:
@@ -17,21 +16,21 @@ spring:
     gateway:
       routes:
         - id: auth-service-updated
-          uri: http://localhost:7777
+          uri: lb://auth-service-updated
           predicates:
             - Path=/authgateway/**
           filters:
             - StripPrefix=1
 
         - id: ticket-service
-          uri: http://localhost:8089
+          uri: lb://ticket-service
           predicates:
             - Path=/ticketgateway/**
           filters:
             - StripPrefix=1
 
         - id: ticket-processing-service
-          uri: http://localhost:8082
+          uri: lb://ticket-processing-service
           predicates:
             - Path=/ticketprocessing/**
           filters:

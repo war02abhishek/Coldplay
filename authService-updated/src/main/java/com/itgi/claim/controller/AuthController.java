@@ -1,13 +1,10 @@
 package com.itgi.claim.controller;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +56,11 @@ public class AuthController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@GetMapping("/get")
+	public String getMessage() {
+		return "Auth Service working";
+	}
+
 	@PostMapping(value = "/register", consumes = "application/json")
 	public RestResponse registerUser(@RequestBody User user) {
 		log.info("Inside registerUser() in AuthController");
@@ -98,6 +99,9 @@ public class AuthController {
 				return new RestResponse(HttpStatus.BAD_REQUEST.value(),
 						result.getFieldErrors().get(0).getDefaultMessage());
 			}
+			
+			//this is call to springboot authentication manager which will take username and pass then internalluy will decide supporting authentication provider which will further call loaduserName if we implemented then ours else default in memory
+//			finally will return this authentication object having all info 
 			Authentication authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(userWrapper.getUsername(), userWrapper.getPassword()));
 
