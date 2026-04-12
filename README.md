@@ -198,7 +198,6 @@ publishes result to:
 
 ## 🔮 Pending / Future Work
 
-- [ ] Fix API Gateway routing for auth-service (currently bypassed via direct :7777 call)
 - [ ] Redis integration for caching seat counts and queue numbers
 - [ ] Kubernetes deployment (Helm charts)
 - [ ] Admin panel in frontend for concert management
