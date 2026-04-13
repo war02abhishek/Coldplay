@@ -249,3 +249,7 @@ Crested EC2 instance ,SSH into it and then install Docker and Docker compose ove
 EC2 instance need to have larger resources else it will crash just after containers start.
 <img width="1094" height="629" alt="image" src="https://github.com/user-attachments/assets/e954b688-40d5-4863-ae90-c0e684896318" />
 
+KUBERNETES
+
+<img width="948" height="442" alt="image" src="https://github.com/user-attachments/assets/32b8955c-5a4a-41a5-ad58-e70f3bbf8ce3" />
+
