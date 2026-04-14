@@ -251,5 +251,17 @@ EC2 instance need to have larger resources else it will crash just after contain
 
 KUBERNETES
 
-<img width="948" height="442" alt="image" src="https://github.com/user-attachments/assets/32b8955c-5a4a-41a5-ad58-e70f3bbf8ce3" />
+<img width="653" height="282" alt="image" src="https://github.com/user-attachments/assets/c4275e54-dd84-4f91-8dce-b3d47d487fea" />
+
+Browser (localhost:4200)
+    ↓ kubectl port-forward
+Frontend Pod (10.244.1.30:80) 
+    ↓ nginx proxy /api/* → api-gateway.coldplay.svc.cluster.local:8080
+API Gateway Pod (10.244.1.26:8080)
+    ↓ /authgateway/** → auth-service-updated.coldplay.svc.cluster.local:7777
+    ↓ /ticketgateway/** → ticket-service.coldplay.svc.cluster.local:8089
+Auth Service Pod (10.244.1.20:7777)
+Ticket Service Pods (10.244.1.21:8089, 10.244.1.22:8089)
+
+
 
