@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticket-processing
+  namespace: coldplay
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ticket-processing
+  template:
+    metadata:
+      labels:
+        app: ticket-processing
+    spec:
+      containers:
+        - name: ticket-processing
+          image: 18219526/coldplay-ticket-processing:1.0
+          ports:
+            - containerPort: 8082
+          # readinessProbe:
+          #   httpGet:
+          #     path: /redis/get
+          #     port: 8082
+          #   initialDelaySeconds: 45
+          #   periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticket-processing-service
+  namespace: coldplay
+spec:
+  selector:
+    app: ticket-processing
+  ports:
+    - port: 8082
+      targetPort: 8082
+  type: ClusterIP

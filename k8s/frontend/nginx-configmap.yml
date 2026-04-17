@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: coldplay
+data:
+  default.conf: |
+    server {
+        listen 80;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # Proxy /api/* → api-gateway (strips /api prefix)
+        location /api/ {
+            resolver kube-dns.kube-system.svc.cluster.local valid=30s;
+            set $upstream http://api-gateway.coldplay.svc.cluster.local:8080;
+            rewrite ^/api/(.*)$ /$1 break;
+            proxy_pass $upstream;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+
+        # Angular SPA fallback
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }

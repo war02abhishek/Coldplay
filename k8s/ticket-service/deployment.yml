@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticket-service
+  namespace: coldplay
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ticket-service
+  template:
+    metadata:
+      labels:
+        app: ticket-service
+    spec:
+      containers:
+        - name: ticket-service
+          image: 18219526/coldplay-ticket-service:1.0
+          ports:
+            - containerPort: 8089
+          # readinessProbe:
+          #   httpGet:
+          #     path: /tickets/get
+          #     port: 8089
+          #   initialDelaySeconds: 45
+          #   periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticket-service
+  namespace: coldplay
+spec:
+  selector:
+    app: ticket-service
+  ports:
+    - port: 8089
+      targetPort: 8089
+  type: ClusterIP
