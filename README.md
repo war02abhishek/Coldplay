@@ -198,7 +198,6 @@ publishes result to:
 
 ## 🔮 Pending / Future Work
 
-- [ ] Fix API Gateway routing for auth-service (currently bypassed via direct :7777 call)
 - [ ] Redis integration for caching seat counts and queue numbers
 - [ ] Kubernetes deployment (Helm charts)
 - [ ] Admin panel in frontend for concert management
@@ -249,4 +248,22 @@ Crested EC2 instance ,SSH into it and then install Docker and Docker compose ove
 
 EC2 instance need to have larger resources else it will crash just after containers start.
 <img width="1094" height="629" alt="image" src="https://github.com/user-attachments/assets/e954b688-40d5-4863-ae90-c0e684896318" />
+
+KUBERNETES
+
+<img width="653" height="282" alt="image" src="https://github.com/user-attachments/assets/c4275e54-dd84-4f91-8dce-b3d47d487fea" />
+
+       Browser (localhost:4200)
+               ↓ kubectl port-forward
+    
+       Frontend Pod (10.244.1.30:80) 
+               ↓ nginx proxy /api/* → api-gateway.coldplay.svc.cluster.local:8080
+       API Gateway Pod (10.244.1.26:8080)
+               ↓ /authgateway/** → auth-service-updated.coldplay.svc.cluster.local:7777
+               ↓ /ticketgateway/** → ticket-service.coldplay.svc.cluster.local:8089
+
+       Auth Service Pod (10.244.1.20:7777)
+       Ticket Service Pods (10.244.1.21:8089, 10.244.1.22:8089)
+
+
 
